@@ -51,10 +51,10 @@ function error(string $error): Response
 /**
  * Simplified success response creation
  *
- * @param  $body
+ * @param  string|array $body
  * @return Response
  */
-function success($body): Response
+function success(string|array $body): Response
 {
     return new Response(200, $body);
 }

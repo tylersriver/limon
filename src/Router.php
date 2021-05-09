@@ -50,7 +50,7 @@ class Router
      * @param string   $name
      * @param callable $callback
      */
-    public function addGroup(string $name, callable $callback)
+    public function addGroup(string $name, callable $callback): void
     {
         $this->previousGroup[] = $this->currentGroup;
         $this->currentGroup .= $name . '/';
@@ -105,7 +105,7 @@ class Router
         $action = $this->parseRoute($request);
         $m = $request->getMethod();
 
-        return $this->getRouteCallable($m, $action);
+        return $this->getRouteCallable($m, $action ?? '');
     }
 
     /**

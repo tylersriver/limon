@@ -51,7 +51,7 @@ class Views
         // Get the view and return
         ob_start();
         include $filePath;
-        return ob_get_clean();
+        return (string)ob_get_clean();
     }
 
     /**

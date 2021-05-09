@@ -28,9 +28,9 @@ class Client
 
     /**
      * @param string $name
-     * @param string $value
+     * @param mixed $value
      */
-    public function addHeader(string $name, string $value)
+    public function addHeader(string $name, $value): void
     {
         $this->headers[$name] = $value;
     }
@@ -68,6 +68,7 @@ class Client
             $response = new Response(500, curl_error($ch));
         } else {
             // Extract Headers
+            $data = (string)$data;
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $header = substr($data, 0, $header_size);
             $response = $this::formatResponseHeaders($header);
@@ -79,7 +80,10 @@ class Client
         return $response;
     }
 
-    final private function flattenHeaders()
+    /**
+     * @return array
+     */
+    private function flattenHeaders(): array
     {
         $flatHeaders = [];
         foreach ($this->headers as $name => $header) {
@@ -92,9 +96,12 @@ class Client
      * @param  string $headers
      * @return Response
      */
-    final private static function formatResponseHeaders(string $headers): Response
+    private static function formatResponseHeaders(string $headers): Response
     {
         $headersArr = preg_split("/\r\n|\n|\r/", $headers);
+        if ($headersArr === false) {
+            return new Response();
+        }
 
         $response = new Response();
         foreach ($headersArr as $item) {

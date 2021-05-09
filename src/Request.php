@@ -65,7 +65,7 @@ class Request
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function fromGlobals(): self
     {

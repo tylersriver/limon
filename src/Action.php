@@ -2,6 +2,8 @@
 
 namespace Yocto;
 
+use ReflectionClass;
+
 abstract class Action
 {
     /**
@@ -33,18 +35,18 @@ abstract class Action
     private function validate(Request $request): Response
     {
         // Store handler props
-        $reflected = new \ReflectionClass($this);
+        $reflected = new ReflectionClass($this);
         foreach ($reflected->getProperties() as $prop) {
             // Get name to match against params
             // USe actual prop name unless @name set
-            if (preg_match('/@name\s+([^\s]+)/', $prop->getDocComment(), $matches)) {
+            if (preg_match('/@name\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
                 list(, $propName) = $matches;
             } else {
                 $propName = $prop->getName();
             }
 
             // Check request method tied to prop
-            if (preg_match('/@method\s+(GET|POST|SERVER)/', $prop->getDocComment(), $matches)) {
+            if (preg_match('/@method\s+(GET|POST|SERVER)/', (string)$prop->getDocComment(), $matches)) {
                 list(, $method) = $matches;
                 switch ($method) {
                     case 'GET':
@@ -67,7 +69,7 @@ abstract class Action
             // Check prop is given in params
             if (!in_array($propName, array_keys($params))) {
                 // Die if missing required param
-                if (preg_match('/@required\s+([^\s]+)/', $prop->getDocComment(), $matches)) {
+                if (preg_match('/@required\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
                     list(, $required) = $matches;
                     if ($required === 'true') {
                         return new Response(500, "Property '$propName' is required.");
@@ -80,7 +82,7 @@ abstract class Action
             $paramValue = $params[$propName];
 
             // Validate the param
-            if (preg_match('/@pattern\s+([^\s]+)/', $prop->getDocComment(), $matches)) {
+            if (preg_match('/@pattern\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
                 list(, $validator) = $matches;
 
                 // Don't allow invalid, regardless of required or not
@@ -94,7 +96,7 @@ abstract class Action
             }
 
             // get type of prop and change type of incoming value
-            if (preg_match('/@var\s+([^\s]+)/', $prop->getDocComment(), $matches)) {
+            if (preg_match('/@var\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
                 list(, $type) = $matches;
                 settype($paramValue, $type);
             } else {

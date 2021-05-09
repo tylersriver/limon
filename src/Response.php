@@ -70,7 +70,7 @@ class Response
      * @param string|array $body
      * @param array        $headers
      */
-    public function __construct(?int $status = null, $body = '', array $headers = [])
+    public function __construct(?int $status = null, string|array $body = '', array $headers = [])
     {
         if ($status !== null) {
             $this->status = $status;
@@ -129,7 +129,7 @@ class Response
     public function getBody(): string
     {
         if (!is_string($this->body)) {
-            return json_encode($this->body);
+            return (string)json_encode($this->body);
         }
 
         return $this->body;
@@ -178,7 +178,7 @@ class Response
     /**
      * @param array $errors
      */
-    public function setErrors(array $errors)
+    public function setErrors(array $errors): void
     {
         $this->errors = $errors;
     }

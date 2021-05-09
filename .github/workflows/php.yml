@@ -19,8 +19,8 @@ jobs:
     - name: Run Code Sniffer
       run: composer run-script sniff      
 
-    - name: Run Linter
-      run: composer run-script lint
+    # - name: Run Linter
+      # run: composer run-script lint
       
     - name: Run Static Analysis
       run: composer run-script phpstan    
