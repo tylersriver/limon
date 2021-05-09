@@ -4,7 +4,11 @@ namespace Yocto;
 
 class Response
 {
-    /** @var int */
+    /**
+     *
+     *
+     * @var int
+     */
     private int $status;
 
     /**
@@ -61,13 +65,14 @@ class Response
 
     /**
      * Response constructor.
-     * @param int|null $status
+     *
+     * @param int|null     $status
      * @param string|array $body
-     * @param array $headers
+     * @param array        $headers
      */
     public function __construct(?int $status = null, $body = '', array $headers = [])
     {
-        if($status !== null) {
+        if ($status !== null) {
             $this->status = $status;
         }
 
@@ -111,7 +116,7 @@ class Response
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function addHeader(string $name, $value): void
     {
@@ -123,7 +128,7 @@ class Response
      */
     public function getBody(): string
     {
-        if(!is_string($this->body)) {
+        if (!is_string($this->body)) {
             return json_encode($this->body);
         }
 
@@ -187,7 +192,7 @@ class Response
     }
 
     /**
-     * @param string $error
+     * @param  string $error
      * @return Response
      */
     public function withError(string $error): Response
@@ -202,15 +207,17 @@ class Response
      */
     public function toJson(): string
     {
-        $res = json_encode([
+        $res = json_encode(
+            [
             'status' => $this->status,
             'reason' => $this->getReasonPhrase(),
             'data' => $this->body,
             'errors' => $this->getErrors()
-        ]);
+            ]
+        );
 
-        if($res === false) {
-            throw new \Exception("Invalid Json: ".json_last_error_msg());
+        if ($res === false) {
+            throw new \Exception("Invalid Json: " . json_last_error_msg());
         }
 
         return $res;

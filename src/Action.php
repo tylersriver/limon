@@ -15,15 +15,15 @@ abstract class Action
     protected Container $container;
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      */
-    public function __invoke(Request $request) : Response
+    public function __invoke(Request $request): Response
     {
         $this->request = $request;
 
         $validateRes = $this->validate($request);
-        if($validateRes->getStatus() !== 200) {
+        if ($validateRes->getStatus() !== 200) {
             return $validateRes;
         }
 
@@ -34,7 +34,7 @@ abstract class Action
     {
         // Store handler props
         $reflected = new \ReflectionClass($this);
-        foreach($reflected->getProperties() as $prop) {
+        foreach ($reflected->getProperties() as $prop) {
             // Get name to match against params
             // USe actual prop name unless @name set
             if (preg_match('/@name\s+([^\s]+)/', $prop->getDocComment(), $matches)) {
@@ -65,12 +65,11 @@ abstract class Action
             }
 
             // Check prop is given in params
-            if(!in_array($propName, array_keys($params))) {
-
+            if (!in_array($propName, array_keys($params))) {
                 // Die if missing required param
                 if (preg_match('/@required\s+([^\s]+)/', $prop->getDocComment(), $matches)) {
                     list(, $required) = $matches;
-                    if($required === 'true') {
+                    if ($required === 'true') {
                         return new Response(500, "Property '$propName' is required.");
                     }
                 }
@@ -86,7 +85,7 @@ abstract class Action
 
                 // Don't allow invalid, regardless of required or not
                 $valid = preg_match("/$validator/", $paramValue);
-                if($valid === 0 or $valid === false) {
+                if ($valid === 0 or $valid === false) {
                     return new Response(500, "Property $propName is invalid.");
                 }
             } else {

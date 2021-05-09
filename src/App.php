@@ -21,11 +21,12 @@ class App
 
     /**
      * App constructor.
+     *
      * @param Container|null $container
      */
     private function __construct(?Container $container = null)
     {
-        if($container !== null) {
+        if ($container !== null) {
             $this->container = $container;
         }
     }
@@ -33,10 +34,10 @@ class App
     /**
      * Create a new app
      *
-     * @param Container|null $container
+     * @param  Container|null $container
      * @return App
      */
-    public static function create(?Container $container = null) : App
+    public static function create(?Container $container = null): App
     {
         self::$instance = new App($container);
         return self::$instance;
@@ -59,7 +60,7 @@ class App
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      */
     public function handle(Request $request): Response
@@ -67,14 +68,18 @@ class App
         // CORS Pre flight check
         $method = $request->getMethod();
         if ($method == 'OPTIONS') {
-            return new Response(200, '', [
+            return new Response(
+                200,
+                '',
+                [
                 'Access-Control-Allow-Headers' => $request->getServer()['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
-            ]);
+                ]
+            );
         }
 
         // Get action
         $route = $this->router->dispatch($request);
-        if($route === null) {
+        if ($route === null) {
             return error("Route Not Found");
         }
 

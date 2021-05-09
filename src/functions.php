@@ -4,6 +4,7 @@ namespace Yocto;
 
 /**
  * Emit the response to the client
+ *
  * @param Response $response
  */
 function emit(Response $response): void
@@ -27,17 +28,19 @@ function emit(Response $response): void
 
 /**
  * Simplified redirect response creation
- * @param string $location
+ *
+ * @param  string $location
  * @return Response
  */
 function redirect(string $location): Response
 {
-    return new Response(302,  '', ['Location' => $location]);
+    return new Response(302, '', ['Location' => $location]);
 }
 
 /**
  * Simplified error response creation
- * @param string $error
+ *
+ * @param  string $error
  * @return Response
  */
 function error(string $error): Response
@@ -47,7 +50,8 @@ function error(string $error): Response
 
 /**
  * Simplified success response creation
- * @param $body
+ *
+ * @param  $body
  * @return Response
  */
 function success($body): Response
@@ -57,7 +61,8 @@ function success($body): Response
 
 /**
  * Simplified html response creation
- * @param string $body
+ *
+ * @param  string $body
  * @return Response
  */
 function html(string $body): Response
@@ -75,7 +80,8 @@ function container(): Container
 
 /**
  * Simplify container()->get() command
- * @param string $name
+ *
+ * @param  string $name
  * @return mixed
  */
 function get(string $name)
@@ -85,14 +91,15 @@ function get(string $name)
 
 /**
  * Simplify retrieving Views instance
- * @param string $viewName
- * @param array $params
+ *
+ * @param  string $viewName
+ * @param  array  $params
  * @return string
  * @throws \Exception
  */
 function render(string $viewName = 'index', array $params = []): string
 {
-    if(!container()->has('Views')) {
+    if (!container()->has('Views')) {
         throw new \Exception('Application container does not have an instance of "Framework\Views"');
     }
 

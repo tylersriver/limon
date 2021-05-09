@@ -16,8 +16,9 @@ class Client
 
     /**
      * Client constructor.
+     *
      * @param string $baseUrl
-     * @param array $headers
+     * @param array  $headers
      */
     public function __construct(string $baseUrl, array $headers = [])
     {
@@ -35,21 +36,21 @@ class Client
     }
 
     /**
-     * @param string $method
-     * @param string $endPoint
-     * @param string|null $body
+     * @param  string      $method
+     * @param  string      $endPoint
+     * @param  string|null $body
      * @return Response
      */
-    protected final function request(string $method = 'GET', string $endPoint = '', string $body = null): Response
+    final protected function request(string $method = 'GET', string $endPoint = '', string $body = null): Response
     {
         $url = $this->baseUrl . $endPoint;
 
         $ch = curl_init();
 
-        if($method === 'POST') {
+        if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, 1);
 
-            if($body !== null) {
+            if ($body !== null) {
                 $this->addHeader('Content-Length', strlen($body));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             }
@@ -63,14 +64,14 @@ class Client
         curl_setopt($ch, CURLOPT_HEADER, 1);
 
         $data = curl_exec($ch);
-        if($data === false) {
+        if ($data === false) {
             $response = new Response(500, curl_error($ch));
         } else {
             // Extract Headers
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $header = substr($data, 0, $header_size);
             $response = $this::formatResponseHeaders($header);
-            $response->setBody(substr($data, $header_size, strlen($data)-$header_size));
+            $response->setBody(substr($data, $header_size, strlen($data) - $header_size));
         }
 
         curl_close($ch);
@@ -78,7 +79,7 @@ class Client
         return $response;
     }
 
-    private final function flattenHeaders()
+    final private function flattenHeaders()
     {
         $flatHeaders = [];
         foreach ($this->headers as $name => $header) {
@@ -88,26 +89,25 @@ class Client
     }
 
     /**
-     * @param string $headers
+     * @param  string $headers
      * @return Response
      */
-    private static final function formatResponseHeaders(string $headers): Response
+    final private static function formatResponseHeaders(string $headers): Response
     {
         $headersArr = preg_split("/\r\n|\n|\r/", $headers);
 
         $response = new Response();
         foreach ($headersArr as $item) {
-
             // Empty header
-            if($item === '') {
+            if ($item === '') {
                 continue;
             }
 
             // Status header
-            if(substr($item, 0, 4) === 'HTTP') {
+            if (substr($item, 0, 4) === 'HTTP') {
                 $statusParts = explode(' ', $item);
-                $response->setStatus( (int)$statusParts[1] );
-                $response->setReasonPhrase( implode(" ", array_slice($statusParts, 2)));
+                $response->setStatus((int)$statusParts[1]);
+                $response->setReasonPhrase(implode(" ", array_slice($statusParts, 2)));
                 continue;
             }
 
@@ -120,8 +120,8 @@ class Client
     }
 
     /**
-     * @param string $endPoint
-     * @param string|null $body
+     * @param  string      $endPoint
+     * @param  string|null $body
      * @return Response
      */
     public function post(string $endPoint = '', string $body = null): Response
@@ -130,8 +130,8 @@ class Client
     }
 
     /**
-     * @param string $endPoint
-     * @param array $queryParams
+     * @param  string $endPoint
+     * @param  array  $queryParams
      * @return Response
      */
     public function get(string $endPoint = '', array $queryParams = [])

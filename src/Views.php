@@ -16,14 +16,15 @@ class Views
 
     /**
      * View constructor.
-     * @param string $viewsDirectory
-     * @param string $viewExtension
+     *
+     * @param  string $viewsDirectory
+     * @param  string $viewExtension
      * @throws \Exception
      */
     public function __construct(string $viewsDirectory, string $viewExtension = 'phtml')
     {
-        if(!is_dir($viewsDirectory)) {
-            throw new \Exception('Directory '.$viewsDirectory.' does not exist');
+        if (!is_dir($viewsDirectory)) {
+            throw new \Exception('Directory ' . $viewsDirectory . ' does not exist');
         }
 
         $this->viewExtension = $viewExtension;
@@ -31,25 +32,25 @@ class Views
     }
 
     /**
-     * @param string $viewName
-     * @param array $params
+     * @param  string $viewName
+     * @param  array  $params
      * @return string
      */
     public function render(string $viewName = 'index', array $params = []): string
     {
-        $filePath = $this->viewsDirectory . '/' . $viewName . '.' .$this->viewExtension;
-        if(!file_exists($filePath)) {
+        $filePath = $this->viewsDirectory . '/' . $viewName . '.' . $this->viewExtension;
+        if (!file_exists($filePath)) {
             return '';
         }
 
         // Inject Parameters
-        if($params) {
+        if ($params) {
             extract($params);
         }
 
         // Get the view and return
         ob_start();
-        include($filePath);
+        include $filePath;
         return ob_get_clean();
     }
 
@@ -58,16 +59,16 @@ class Views
      */
     private function insert(string $viewName): void
     {
-        $filePath = $this->viewsDirectory . '/' . $viewName . '.' .$this->viewExtension;
-        if(!file_exists($filePath)) {
+        $filePath = $this->viewsDirectory . '/' . $viewName . '.' . $this->viewExtension;
+        if (!file_exists($filePath)) {
             return;
         }
 
-        include($filePath);
+        include $filePath;
     }
 
     /**
-     * @param mixed $string
+     * @param  mixed $string
      * @return string
      */
     public function e($string): string

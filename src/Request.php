@@ -41,6 +41,7 @@ class Request
 
     /**
      * Request constructor.
+     *
      * @param array $get
      * @param array $post
      * @param array $server
@@ -53,15 +54,14 @@ class Request
         array $server = [],
         array $request = [],
         array $files = []
-    ){
+    ) {
         $this->files = $files;
         $this->get = $get;
         $this->post = $post;
         $this->request = $request;
         $this->server = $server;
         $this->method = $server['REQUEST_METHOD'] ?? 'GET';
-        $this->uri = explode('?',$server['REQUEST_URI'])[0];
-
+        $this->uri = explode('?', $server['REQUEST_URI'])[0];
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Yocto;
 
 use Exception;
@@ -14,6 +13,7 @@ class Container
 
     /**
      * Container constructor.
+     *
      * @param array $definitions
      */
     public function __construct(array $definitions = [])
@@ -22,7 +22,7 @@ class Container
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return bool
      */
     public function has(string $key): bool
@@ -32,8 +32,9 @@ class Container
 
     /**
      * Set a value in the registry
+     *
      * @param string $key
-     * @param mixed $val
+     * @param mixed  $val
      */
     public function set(string $key, $val): void
     {
@@ -41,13 +42,13 @@ class Container
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return mixed
      * @throws Exception
      */
     public function get(string $key)
     {
-        if(!$this->has($key)) {
+        if (!$this->has($key)) {
             throw new Exception('Key not found');
         }
         return $this->registry[$key];
