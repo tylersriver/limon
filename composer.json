@@ -19,6 +19,7 @@
         "@unit"
       ],
       "unit": "phpunit",
+      "github-action-phpunit": "phpunit --no-coverage",
       "stan": "phpstan analyse src --memory-limit=-1",
       "sniff": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s --colors src/",
       "fix": "php vendor/squizlabs/php_codesniffer/bin/phpcbf src/",
