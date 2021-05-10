@@ -28,7 +28,7 @@ class App
      */
     private function __construct(
         ?Container $container = null
-    ){
+    ) {
         if ($container !== null) {
             $this->container = $container;
         }
@@ -40,7 +40,7 @@ class App
      */
     public function add(Middleware $middleware): void
     {
-        if($this->applicationStack === null) {
+        if ($this->applicationStack === null) {
             throw new Exception("Kernel has not been bootstrapped, please call setRouter() before adding middeleware");
         }
 
@@ -70,7 +70,7 @@ class App
 
     /**
      * NOTE: This function will reset the middleware stack
-     * 
+     *
      * @param Router $router
      */
     public function setRouter(Router $router): void

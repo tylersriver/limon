@@ -3,10 +3,10 @@
 namespace Yocto;
 
 /**
- * The Kernel is a middleware implementation 
- * that's purpose is to execute the route of the 
+ * The Kernel is a middleware implementation
+ * that's purpose is to execute the route of the
  * request.
- * 
+ *
  * It will NOT call the $next object, regardless if it is set or not.
  */
 class Kernel extends Middleware
