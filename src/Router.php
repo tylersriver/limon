@@ -6,8 +6,6 @@ class Router
 {
     private array $routeMap;
 
-    private array $methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
-
     private string $routeRegex = '/^\w*(\/\w*)*$/';
 
     private string $currentGroup = '';
@@ -34,10 +32,6 @@ class Router
         }
 
         foreach ($method as $m) {
-            if (!in_array($m, $this->methods)) {
-                break;
-            }
-
             $this->routeMap[$m][$path] = $class;
         }
 

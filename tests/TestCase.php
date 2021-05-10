@@ -3,7 +3,12 @@
 namespace Yocto\Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use Yocto\App;
+use Yocto\Container;
 use Yocto\Request;
+use Yocto\Response;
+use Yocto\Router;
+use Yocto\Views;
 
 abstract class TestCase extends PHPUnitTestCase
 {
@@ -32,5 +37,22 @@ abstract class TestCase extends PHPUnitTestCase
         $_POST = $post;
 
         return Request::fromGlobals();
+    }
+
+    public function getBaseAppInstance()
+    {
+        $container = new Container([
+            'Views' => new Views(__DIR__ . '/assets/templates')
+        ]);
+        
+        $router = new Router();
+        $router->get('home', function(Request $request) {
+            return new Response(200, 'Hi');
+        });
+
+        $app = App::create($container);
+        $app->setRouter($router);
+
+        return $app;
     }
 }

@@ -48,7 +48,7 @@ class Request
      * @param array $request
      * @param array $files
      */
-    private function __construct(
+    public function __construct(
         array $get = [],
         array $post = [],
         array $server = [],
