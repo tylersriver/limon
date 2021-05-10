@@ -81,7 +81,7 @@ class RouterTest extends TestCase
         $callable = $this->r->dispatch(new Request(server: ['REQUEST_URI' => 'group/index']));
         $this->assertEquals(is_callable($callable), false);
 
-        $callable = $this->r->dispatch(new Request(server: ['REQUEST_URI' => '/group/some']));
+        $callable = $this->r->dispatch($this->createServerRequest('/group/some'));
         $this->assertInstanceOf(TestAction::class, $callable);
 
         $callable = $this->r->dispatch(new Request(server: ['REQUEST_URI' => '/group/home']));
