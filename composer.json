@@ -16,9 +16,9 @@
         "@lint",
         "@stan",
         "@md",
-        "@phpunit"
+        "@unit"
       ],
-      "phpunit": "phpunit",
+      "unit": "phpunit",
       "stan": "phpstan analyse src --memory-limit=-1",
       "sniff": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s --colors src/",
       "fix": "php vendor/squizlabs/php_codesniffer/bin/phpcbf src/",
@@ -47,6 +47,7 @@
         "jakub-onderka/php-console-highlighter": "^0.4.0",
         "phpmd/phpmd": "^2.8",
         "phpstan/phpstan": "^0.12.5",
+        "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.5"
     }
   }
