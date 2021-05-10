@@ -17,7 +17,7 @@ class App
     private static App $instance;
 
     /**
-     * @var middleware
+     * @var Middleware
      */
     private Middleware $applicationStack;
 
@@ -40,7 +40,7 @@ class App
      */
     public function add(Middleware $middleware): void
     {
-        if ($this->applicationStack === null) {
+        if (!isset($this->applicationStack)) {
             throw new Exception("Kernel has not been bootstrapped, please call setRouter() before adding middeleware");
         }
 
