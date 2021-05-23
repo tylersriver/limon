@@ -116,10 +116,10 @@ if (!function_exists('Yocto\render')) {
      */
     function render(string $viewName = 'index', array $params = []): string
     {
-        if (!container()->has('Views')) {
+        if (!container()->has(Views::class)) {
             throw new \Exception('Application container does not have an instance of "Framework\Views"');
         }
 
-        return get('Views')->render($viewName, $params);
+        return get(Views::class)->render($viewName, $params);
     }
 }
