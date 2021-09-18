@@ -69,11 +69,8 @@ abstract class Action
             // Check prop is given in params
             if (!in_array($propName, array_keys($params))) {
                 // Die if missing required param
-                if (preg_match('/@required\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
-                    list(, $required) = $matches;
-                    if ($required === 'true') {
-                        return new Response(500, "Property '$propName' is required.");
-                    }
+                if (preg_match('/@required/', (string)$prop->getDocComment()) === 1) {
+                    return new Response(500, "Property '$propName' is required.");
                 }
 
                 // Doesn't exist and not required, let's go to next iteration

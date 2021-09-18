@@ -12,7 +12,7 @@ class ViewTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->v = new Views(__DIR__ .'/assets/templates');
+        $this->v = new Views(__DIR__ .'/App/Views/');
     }
     
     public function testBadTemplatesDir()

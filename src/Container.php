@@ -48,9 +48,35 @@ class Container
      */
     public function get(string $key)
     {
-        if (!$this->has($key)) {
-            throw new Exception('Key not found');
+        // Check static registry first
+        if ($this->has($key)) {
+            return $this->registry[$key];
         }
-        return $this->registry[$key];
+
+        // TODO : Finish DI
+        // If class exists, Autowire
+        // if (class_exists($key)) {
+        //     return $this->resolve($key);
+        // }
+
+        throw new Exception('Key not found');
+    }
+
+    /**
+     * @param string $key
+     * @return object
+     */
+    protected function resolve(string $key)
+    {
+        $reflection = new \ReflectionMethod($key, '__construct');
+        $parameters = $reflection->getParameters();
+
+        $dependences = [];
+        foreach ($parameters as $parameter) {
+            $dependenceClass = (string) $parameter->getType();
+            $dependences[] = $this->get($dependenceClass);
+        }
+
+        return new $key(...$dependences);
     }
 }

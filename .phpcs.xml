@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Ion Framework Coding Standard">
-    <description>Ion Framework Coding Standard</description>
+<ruleset name="Yocto Framework Coding Standard">
+    <description>Yocto Framework Coding Standard</description>
     <arg value="p" />
 
     <rule ref="PSR12"/>

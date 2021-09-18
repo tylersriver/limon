@@ -69,10 +69,10 @@ class Client
         } else {
             // Extract Headers
             $data = (string)$data;
-            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-            $header = substr($data, 0, $header_size);
+            $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $header = substr($data, 0, $headerSize);
             $response = $this::formatResponseHeaders($header);
-            $response->setBody(substr($data, $header_size, strlen($data) - $header_size));
+            $response->setBody(substr($data, $headerSize, strlen($data) - $headerSize));
         }
 
         curl_close($ch);

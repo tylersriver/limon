@@ -2,12 +2,10 @@
 
 namespace Yocto\Tests;
 
-use Exception;
-use Yocto\Container;
+use Yocto\Tests\App\Actions\FooAction;
 use Yocto\Request;
 use Yocto\Response;
 use Yocto\Router;
-use Yocto\Views;
 
 class RouterTest extends TestCase
 {
@@ -72,7 +70,7 @@ class RouterTest extends TestCase
         $this->r->addGroup('group', function (Router $r) {
             $r->get('index', fn(Request $request) => new Response(200, 'Hi'));
             $r->get('home', 'ClassThatDoesntExist');
-            $r->get('some', TestAction::class);
+            $r->get('some', FooAction::class);
         });
 
         $callable = $this->r->dispatch(new Request(server: ['REQUEST_URI' => '/group/index']));
@@ -82,7 +80,7 @@ class RouterTest extends TestCase
         $this->assertEquals(is_callable($callable), false);
 
         $callable = $this->r->dispatch($this->createServerRequest('/group/some'));
-        $this->assertInstanceOf(TestAction::class, $callable);
+        $this->assertInstanceOf(FooAction::class, $callable);
 
         $callable = $this->r->dispatch(new Request(server: ['REQUEST_URI' => '/group/home']));
         $this->assertEquals(null, $callable);
