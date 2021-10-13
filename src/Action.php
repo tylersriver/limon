@@ -3,6 +3,8 @@
 namespace Yocto;
 
 use ReflectionClass;
+use ReflectionNamedType;
+use ReflectionUnionType;
 use Yocto\Attributes\Parameter;
 use Yocto\Attributes\Required;
 
@@ -75,9 +77,10 @@ abstract class Action
             $type = $prop->getType();
             if ($type === null) {
                 return error("Property $name must have a type.");
+            } elseif ($type instanceof ReflectionNamedType) {
+                $type = $type->getName();
+                settype($value, $type);
             }
-            $type = $type->getName();
-            settype($value, $type);
 
             $this->{$prop->getName()} = $value;
         }

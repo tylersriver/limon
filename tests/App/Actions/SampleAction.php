@@ -19,7 +19,7 @@ class SampleAction extends Action
         )
     ]
     #[Required]
-    protected $foo;
+    protected string $foo;
 
     private SampleService $controller;
 
