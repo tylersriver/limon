@@ -43,7 +43,7 @@ abstract class Action
             $requiredAttr = $prop->getAttributes(Required::class);
 
             // If no Attr we can't do anything else
-            if(count($parameterAttr) === 0) {
+            if (count($parameterAttr) === 0) {
                 continue;
             }
 
@@ -53,8 +53,8 @@ abstract class Action
 
             // Check request method tied to prop
             $allParameters = $this->collectParameters($request);
-            if(!array_key_exists($name, $allParameters)) {
-                if(count($requiredAttr) > 0) {
+            if (!array_key_exists($name, $allParameters)) {
+                if (count($requiredAttr) > 0) {
                     return error("Property $name is required.");
                 }
                 continue;
@@ -73,7 +73,7 @@ abstract class Action
 
             // Set the type
             $type = $prop->getType();
-            if($type === null) {
+            if ($type === null) {
                 return error("Property $name must have a type.");
             }
             $type = $type->getName();
@@ -88,8 +88,8 @@ abstract class Action
     private function collectParameters(Request $request): array
     {
         return array_merge(
-            $request->getGet(), 
-            $request->getPost(), 
+            $request->getGet(),
+            $request->getPost(),
             $request->getServer()
         );
     }

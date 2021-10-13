@@ -13,7 +13,6 @@ final class Parameter
         public string $name,
         public string $method,
         public string $pattern,
-    ){
-        
+    ) {
     }
 }
