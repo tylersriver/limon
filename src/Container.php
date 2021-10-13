@@ -68,7 +68,7 @@ class Container
      */
     protected function resolve(string $key)
     {
-        if(method_exists($key, '__construct')) {
+        if (method_exists($key, '__construct')) {
             $reflection = new \ReflectionMethod($key, '__construct');
             $parameters = $reflection->getParameters();
     
