@@ -3,6 +3,8 @@
 namespace Yocto;
 
 use ReflectionClass;
+use Yocto\Attributes\Parameter;
+use Yocto\Attributes\Required;
 
 abstract class Action
 {
@@ -37,75 +39,59 @@ abstract class Action
         // Store handler props
         $reflected = new ReflectionClass($this);
         foreach ($reflected->getProperties() as $prop) {
-            // Get name to match against params
-            // USe actual prop name unless @name set
-            if (preg_match('/@name\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
-                list(, $propName) = $matches;
-            } else {
-                $propName = $prop->getName();
+            $parameterAttr = $prop->getAttributes(Parameter::class);
+            $requiredAttr = $prop->getAttributes(Required::class);
+
+            // If no Attr we can't do anything else
+            if(count($parameterAttr) === 0) {
+                continue;
             }
+
+            /** @var Parameter */
+            $parameterAttr = $parameterAttr[0]->newInstance();
+            $name = $parameterAttr->name;
 
             // Check request method tied to prop
-            if (preg_match('/@method\s+(GET|POST|SERVER)/', (string)$prop->getDocComment(), $matches)) {
-                list(, $method) = $matches;
-                switch ($method) {
-                    case 'GET':
-                        $params = $request->getGet();
-                        break;
-                    case 'POST':
-                        $params = $request->getPost();
-                        break;
-                    case 'SERVER':
-                        $params = $request->getServer();
-                        break;
-                    default:
-                        $params = [];
+            $allParameters = $this->collectParameters($request);
+            if(!array_key_exists($name, $allParameters)) {
+                if(count($requiredAttr) > 0) {
+                    return error("Property $name is required.");
                 }
-            } else {
-                // If no method doesn't come from globals
                 continue;
             }
 
-            // Check prop is given in params
-            if (!in_array($propName, array_keys($params))) {
-                // Die if missing required param
-                if (preg_match('/@required/', (string)$prop->getDocComment()) === 1) {
-                    return new Response(500, "Property '$propName' is required.");
-                }
-
-                // Doesn't exist and not required, let's go to next iteration
-                continue;
-            }
-            $paramValue = $params[$propName];
+            $value = $allParameters[$name];
 
             // Validate the param
-            if (preg_match('/@pattern\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
-                list(, $validator) = $matches;
-
-                // Don't allow invalid, regardless of required or not
-                $valid = preg_match("/$validator/", $paramValue);
-                if ($valid === 0 or $valid === false) {
-                    return new Response(500, "Property $propName is invalid.");
-                }
-            } else {
-                // Prop must have validator
-                return new Response(500, "Property $propName is invalid.");
+            // Don't allow invalid, regardless of required or not
+            // Prop must have validator
+            $pattern = $parameterAttr->pattern;
+            $valid = preg_match("/$pattern/", $value);
+            if ($valid === 0 or $valid === false) {
+                return new Response(500, "Property $name is invalid.");
             }
 
-            // get type of prop and change type of incoming value
-            if (preg_match('/@var\s+([^\s]+)/', (string)$prop->getDocComment(), $matches)) {
-                list(, $type) = $matches;
-                settype($paramValue, $type);
-            } else {
-                // Must have a type
-                return new Response(500, "Property $propName is must have a type declared.");
+            // Set the type
+            $type = $prop->getType();
+            if($type === null) {
+                return error("Property $name must have a type.");
             }
+            $type = $type->getName();
+            settype($value, $type);
 
-            // Set the prop
-            $this->{$prop->getName()} = $paramValue;
+            $this->{$prop->getName()} = $value;
         }
 
         return new Response(200);
+    }
+
+    private function collectParameters(Request $request): array
+    {
+        return array_merge(
+            $request->getGet(), 
+            $request->getPost(), 
+            $request->getServer()
+        );
     }
 
     /**

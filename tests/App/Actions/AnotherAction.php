@@ -3,15 +3,14 @@
 namespace Yocto\Tests\App\Actions;
 
 use Yocto\Action;
+use Yocto\Attributes\Parameter;
+use Yocto\Attributes\Required;
 use Yocto\Response;
 
 class AnotherAction extends Action
 {
-    /**
-     * @required
-     * @name foo
-     * @method GET
-     */
+    #[Parameter('foo', Parameter::GET, '')]
+    #[Required]
     protected string $var;
 
     public function action(): Response

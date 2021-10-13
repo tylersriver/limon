@@ -43,18 +43,13 @@ class ActionTest extends TestCase
         $action = new IndexAction();
         /** @var Response */
         $response = $action($request);
-        $this->assertEquals(500, $response->getStatus());
-
-        // No validator regex
-        $action = new AnotherAction();
-        $response = $action($request);
-        $this->assertEquals(500, $response->getStatus());
+        $this->assertEquals(400, $response->getStatus());
 
         // Missing required parameter
         $action = new MissingRequiredAction();
         $request = $this->createServerRequest('', 'GET', []);
         $response = $action($request);
-        $this->assertEquals(500, $response->getStatus());
+        $this->assertEquals(400, $response->getStatus());
     }
 
 }
