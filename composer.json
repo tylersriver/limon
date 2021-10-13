@@ -41,7 +41,8 @@
     },
     "autoload-dev": {
       "psr-4": {
-        "Yocto\\Tests\\": "tests"
+        "Yocto\\Tests\\": "tests",
+        "Example\\": "tests/Example"
       }
     },
     "require-dev": {

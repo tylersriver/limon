@@ -53,11 +53,11 @@ class Container
             return $this->registry[$key];
         }
 
-        // TODO : Finish DI
         // If class exists, Autowire
-        // if (class_exists($key)) {
-        //     return $this->resolve($key);
-        // }
+        if (class_exists($key)) {
+            $this->registry[$key] = $this->resolve($key);
+            return $this->registry[$key];
+        }
 
         throw new Exception('Key not found');
     }

@@ -54,7 +54,7 @@ class Response
         200 => 'OK',
         201 => 'Created',
         202 => 'Modified',
-        301 => 'Redirect',
+        302 => 'Redirect',
         400 => 'Bad Request',
         401 => 'Unauthorized',
         403 => 'Forbidden',

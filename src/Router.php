@@ -87,7 +87,7 @@ class Router
         if (!class_exists($route)) {
             return null;
         }
-        return new $route();
+        return container()->get($route);
     }
 
     /**
