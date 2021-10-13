@@ -78,7 +78,7 @@ class Container
                 $dependences[] = $this->get($dependenceClass);
             }
 
-            return $key(...$dependences);
+            return new $key(...$dependences);
         }
 
         return new $key();
