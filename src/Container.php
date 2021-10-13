@@ -68,15 +68,19 @@ class Container
      */
     protected function resolve(string $key)
     {
-        $reflection = new \ReflectionMethod($key, '__construct');
-        $parameters = $reflection->getParameters();
+        if(method_exists($key, '__construct')) {
+            $reflection = new \ReflectionMethod($key, '__construct');
+            $parameters = $reflection->getParameters();
+    
+            $dependences = [];
+            foreach ($parameters as $parameter) {
+                $dependenceClass = (string) $parameter->getType();
+                $dependences[] = $this->get($dependenceClass);
+            }
 
-        $dependences = [];
-        foreach ($parameters as $parameter) {
-            $dependenceClass = (string) $parameter->getType();
-            $dependences[] = $this->get($dependenceClass);
+            return $key(...$dependences);
         }
 
-        return new $key(...$dependences);
+        return new $key();
     }
 }

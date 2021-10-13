@@ -42,7 +42,7 @@ abstract class TestCase extends PHPUnitTestCase
     public function getBaseAppInstance()
     {
         $container = new Container([
-            'Views' => new Views(__DIR__ . '/assets/templates')
+            'Views' => new Views(__DIR__ . '/App/Views')
         ]);
         
         $router = new Router();

@@ -67,6 +67,8 @@ class RouterTest extends TestCase
 
     public function testDispatch()
     {
+        $app = $this->getBaseAppInstance();
+
         $this->r->addGroup('group', function (Router $r) {
             $r->get('index', fn(Request $request) => new Response(200, 'Hi'));
             $r->get('home', 'ClassThatDoesntExist');
