@@ -10,4 +10,9 @@ class SampleController
     {
         $this->otherController = $otherController;
     }
+
+    public function getFoo()
+    {
+        return $this->otherController->foo;
+    }
 }

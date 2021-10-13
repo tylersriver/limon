@@ -18,6 +18,6 @@ class SampleAction extends Action
 
     public function action(): Response
     {
-        return success([]);
+        return success(['message' => $this->controller->getFoo()]);
     }
 }
