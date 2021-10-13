@@ -1,8 +1,8 @@
 <?php
 
-namespace Example;
+namespace Yocto\Tests\App\Service;
 
-class OtherController
+class OtherService
 {
     public string $foo = 'bar';
 

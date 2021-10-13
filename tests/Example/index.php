@@ -1,12 +1,12 @@
 <?php
 
-use Example\SampleAction;
-use Example\SampleController;
 use Yocto\Request;
 use Yocto\Container;
 use Yocto\Views;
 use Yocto\Router;
 use Yocto\App;
+use Yocto\Tests\App\Actions\AnotherAction;
+use Yocto\Tests\App\Actions\SampleAction;
 
 use function Yocto\emit;
 use function Yocto\redirect;
@@ -27,7 +27,7 @@ ini_set('display_errors', $config['ENVIRONMENT'] === 'DEVELOPMENT'  ? 1 : 0);
 
 $container = new Container([
     'Config' => $config,
-    Views::class => new Views(__DIR__)
+    Views::class => new Views(__DIR__ . '/../App/Views')
 ]);
 
 $app = App::create($container);
