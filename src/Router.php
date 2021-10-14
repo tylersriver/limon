@@ -6,7 +6,7 @@ class Router
 {
     private array $routeMap;
 
-    private string $routeRegex = '/^(\/[\w]*)*$/';
+    private string $routeRegex = '/^(\/[\w|-]*)*$/';
 
     private string $currentGroup = '';
 

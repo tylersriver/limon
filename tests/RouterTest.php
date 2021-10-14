@@ -62,7 +62,7 @@ class RouterTest extends TestCase
     public function testAddInvalidRoute()
     {
         $this->expectException('Exception');
-        $this->r->get('/index-aasdfas', fn(Request $request) => new Response(200, 'Hi'));
+        $this->r->get('index-aasdfas', fn(Request $request) => new Response(200, 'Hi'));
     }
 
     public function testDispatch()
