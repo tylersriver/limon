@@ -34,8 +34,9 @@ $app = App::create($container);
 
 $r = new Router($container);
 $r->get('', fn() => redirect('/view/home'));
-$r->get('view/home', fn() => html(render()));
-$r->get('api/test', SampleAction::class);
+$r->get('/', fn() => redirect('/view/home'));
+$r->get('/view/home', fn() => html(render()));
+$r->get('/api/test', SampleAction::class);
 $app->setRouter($r);
 
 $app->add(new class extends Yocto\Middleware 

@@ -6,7 +6,7 @@ class Router
 {
     private array $routeMap;
 
-    private string $routeRegex = '/^\w*(\/\w*)*$/';
+    private string $routeRegex = '/^(\/[\w]*)*$/';
 
     private string $currentGroup = '';
 
@@ -47,7 +47,7 @@ class Router
     public function addGroup(string $name, callable $callback): void
     {
         $this->previousGroup[] = $this->currentGroup;
-        $this->currentGroup .= $name . '/';
+        $this->currentGroup .= $name;
 
         $callback($this);
 
@@ -60,8 +60,7 @@ class Router
      */
     public function parseRoute(Request $request): ?string
     {
-        $uri = $request->getUri();
-        return substr($uri, 1, strlen($uri) - 1);
+        return $request->getUri();
     }
 
     /**
