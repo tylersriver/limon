@@ -46,7 +46,7 @@ abstract class TestCase extends PHPUnitTestCase
         ]);
         
         $router = new Router();
-        $router->get('home', function(Request $request) {
+        $router->get('/home', function(Request $request) {
             return new Response(200, 'Hi');
         });
 

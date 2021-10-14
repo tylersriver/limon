@@ -23,56 +23,56 @@ class RouterTest extends TestCase
 
     public function testAddGet()
     {
-        $this->r->get('index', fn(Request $request) => new Response(200, 'Hi'));
-        $this->assertEquals($this->r->hasRoute('GET', 'index'), true);
+        $this->r->get('/index', fn(Request $request) => new Response(200, 'Hi'));
+        $this->assertEquals($this->r->hasRoute('GET', '/index'), true);
     }
 
     public function testAddPost()
     {
-        $this->r->post('index', fn(Request $request) => new Response(200, 'Hi'));
-        $this->assertEquals($this->r->hasRoute('POST', 'index'), true);
+        $this->r->post('/index', fn(Request $request) => new Response(200, 'Hi'));
+        $this->assertEquals($this->r->hasRoute('POST', '/index'), true);
     }
 
     public function testAddPut()
     {
-        $this->r->put('index', fn(Request $request) => new Response(200, 'Hi'));
-        $this->assertEquals($this->r->hasRoute('PUT', 'index'), true);
+        $this->r->put('/index', fn(Request $request) => new Response(200, 'Hi'));
+        $this->assertEquals($this->r->hasRoute('PUT', '/index'), true);
     }
 
     public function testAddDelete()
     {
-        $this->r->delete('index', fn(Request $request) => new Response(200, 'Hi'));
-        $this->assertEquals($this->r->hasRoute('DELETE', 'index'), true);
+        $this->r->delete('/index', fn(Request $request) => new Response(200, 'Hi'));
+        $this->assertEquals($this->r->hasRoute('DELETE', '/index'), true);
     }
 
     public function testAddOptions()
     {
-        $this->r->options('index', fn(Request $request) => new Response(200, 'Hi'));
-        $this->assertEquals($this->r->hasRoute('OPTIONS', 'index'), true);
+        $this->r->options('/index', fn(Request $request) => new Response(200, 'Hi'));
+        $this->assertEquals($this->r->hasRoute('OPTIONS', '/index'), true);
     }
 
     public function testAddGroup()
     {
-        $this->r->addGroup('group', function (Router $r) {
-            $r->get('index', fn(Request $request) => new Response(200, 'Hi'));
+        $this->r->addGroup('/group', function (Router $r) {
+            $r->get('/index', fn(Request $request) => new Response(200, 'Hi'));
         });
-        $this->assertEquals($this->r->hasRoute('GET', 'group/index'), true);
+        $this->assertEquals($this->r->hasRoute('GET', '/group/index'), true);
     }
 
     public function testAddInvalidRoute()
     {
         $this->expectException('Exception');
-        $this->r->get('index-aasdfas', fn(Request $request) => new Response(200, 'Hi'));
+        $this->r->get('/index-aasdfas', fn(Request $request) => new Response(200, 'Hi'));
     }
 
     public function testDispatch()
     {
         $app = $this->getBaseAppInstance();
 
-        $this->r->addGroup('group', function (Router $r) {
-            $r->get('index', fn(Request $request) => new Response(200, 'Hi'));
-            $r->get('home', 'ClassThatDoesntExist');
-            $r->get('some', FooAction::class);
+        $this->r->addGroup('/group', function (Router $r) {
+            $r->get('/index', fn(Request $request) => new Response(200, 'Hi'));
+            $r->get('/home', 'ClassThatDoesntExist');
+            $r->get('/some', FooAction::class);
         });
 
         $callable = $this->r->dispatch(new Request(server: ['REQUEST_URI' => '/group/index']));
