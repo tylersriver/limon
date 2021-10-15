@@ -207,15 +207,21 @@ class Response
      */
     public function toJson(): string
     {
-        $res = json_encode(
-            [
+        $res = [
             'status' => $this->status,
             'reason' => $this->getReasonPhrase(),
-            'data' => $this->body,
-            'errors' => $this->getErrors()
-            ]
-        );
+        ];
 
+        if ($this->body != '') {
+            $res['data'] = $this->body;
+        }
+
+        // Add error
+        if (count($this->getErrors()) > 0) {
+            $res['errors'] = $this->getErrors();
+        }
+
+        $res = json_encode($res);
         if ($res === false) {
             throw new \Exception("Invalid Json: " . json_last_error_msg());
         }

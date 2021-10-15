@@ -47,12 +47,37 @@ if (!function_exists('Yocto\error')) {
     /**
      * Simplified error response creation
      *
-     * @param  string $error
+     * @param  string|array $error
      * @return Response
      */
-    function error(string $error): Response
+    function error(string|array $error): Response
     {
-        return (new Response(400))->withError($error);
+        $res = new Response(400);
+        if (is_array($error)) {
+            $res->setErrors($error);
+        } else {
+            $res->withError($error);
+        }
+        return $res;
+    }
+}
+
+if (!function_exists('Yocto\fail')) {
+    /**
+     * Simplified error response creation
+     *
+     * @param  string|array $error
+     * @return Response
+     */
+    function fail(string|array $error): Response
+    {
+        $res = new Response(500);
+        if (is_array($error)) {
+            $res->setErrors($error);
+        } else {
+            $res->withError($error);
+        }
+        return $res;
     }
 }
 
