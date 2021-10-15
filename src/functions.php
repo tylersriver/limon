@@ -125,7 +125,7 @@ if (!function_exists('Yocto\render')) {
 }
 
 if (!function_exists('getallheaders')) {
-    function getallheaders()
+    function getallheaders(): array
     {
         $headers = [];
         foreach ($_SERVER as $name => $value) {
