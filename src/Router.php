@@ -6,7 +6,7 @@ class Router
 {
     private array $routeMap;
 
-    private string $routeRegex = '/^(\/[\w|-]*)*$/';
+    private string $routeRegex = '/^(\/:?[\w|-]*)*$/';
 
     private string $currentGroup = '';
 
@@ -31,8 +31,23 @@ class Router
             throw new \Exception('Invalid route pattern');
         }
 
+        $pathParts = explode('/', $path);
+        unset($pathParts[0]);
+
         foreach ($method as $m) {
-            $this->routeMap[$m][$path] = $class;
+            $current = &$this->routeMap[$m];
+            foreach ($pathParts as $part) {
+                if (!is_array($current)) {
+                    $current = [$current];
+                }
+
+                if (!array_key_exists($part, $current)) {
+                    $current[$part] = [];
+                }
+                $current = &$current[$part];
+            }
+
+            $current = $class;
         }
 
         return $this;
@@ -56,49 +71,83 @@ class Router
 
     /**
      * @param  Request $request
-     * @return string|null
+     * @return array|null
      */
-    public function parseRoute(Request $request): ?string
+    public function parseRoute(Request $request): ?array
     {
-        return $request->getUri();
+        // Grab URI
+        $uri = $request->getUri();
+
+        // split URI by /
+        $uriParts = explode('/', $uri);
+        unset($uriParts[0]);
+
+        // Place method at front
+        array_unshift($uriParts, $request->getMethod());
+
+        // traverse the route map
+        $routeMap = $this->routeMap;
+        $current = &$routeMap;
+        $attrs = [];
+        foreach ($uriParts as $part) {
+            // When the key doesn't exist we look for
+            // dynamic attributes
+            if (!is_array($current)) {
+                return null;
+            }
+
+            if (!array_key_exists($part, $current)) {
+                foreach ($current as $key => $section) {
+                    if (substr($key, 0, 1) === ':') {
+                        $attr = substr($key, 1);
+                        $attrs[$attr] = $part;
+                        $current = &$current[$key];
+                        continue 2;
+                    }
+                }
+
+                return null;
+            }
+            $current = &$current[$part];
+        }
+
+        if (is_array($current)) {
+            if (!array_key_exists(0, $current)) {
+                return null;
+            }
+
+            $current = $current[0];
+        }
+
+        return [$current, $attrs];
     }
 
     /**
-     * @param  string $method
-     * @param  string $name
-     * @return null|callable
+     * @param  Request $request
+     * @return array|null
      */
-    public function getRouteCallable(string $method, string $name): ?callable
+    public function dispatch(Request $request): ?array
     {
-        if (!$this->hasRoute($method, $name)) {
+        // Determine the route
+        $route = $this->parseRoute($request);
+        if ($route === null) {
             return null;
         }
 
-        $route = $this->routeMap[$method][$name];
+        $routeExecutable = $route[0];
 
         // If route is callable return
-        if (is_callable($route)) {
+        if (is_callable($routeExecutable)) {
             return $route;
         }
 
         // If the route is not callable we assume class
         // This has the benefit of having the container passed to the constructor
-        if (!class_exists($route)) {
+        if (!class_exists($routeExecutable)) {
             return null;
         }
-        return container()->get($route);
-    }
 
-    /**
-     * @param  Request $request
-     * @return callable|null
-     */
-    public function dispatch(Request $request): ?callable
-    {
-        $action = $this->parseRoute($request);
-        $m = $request->getMethod();
-
-        return $this->getRouteCallable($m, $action ?? '');
+        return [container()->get($routeExecutable), $route[1]];
     }
 
     /**
@@ -149,15 +198,5 @@ class Router
     public function options(string $path, $class)
     {
         return $this->addRoute('OPTIONS', $path, $class);
-    }
-
-    /**
-     * @param  string $method
-     * @param  string $path
-     * @return bool
-     */
-    public function hasRoute(string $method, string $path): bool
-    {
-        return isset($this->routeMap[$method][$path]);
     }
 }

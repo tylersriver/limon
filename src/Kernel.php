@@ -26,7 +26,12 @@ class Kernel extends Middleware
             return error("Route Not Found");
         }
 
+        // Inject attributes to the request
+        foreach ($route[1] as $key => $val) {
+            $request->setAttribute($key, $val);
+        }
+
         // Execute Action
-        return $route($request);
+        return $route[0]($request);
     }
 }

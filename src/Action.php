@@ -54,7 +54,7 @@ abstract class Action
             $name = $parameterAttr->name;
 
             // Check request method tied to prop
-            $allParameters = $this->collectParameters($request);
+            $allParameters = $parameterAttr->getSearchArray($request);
             if (!array_key_exists($name, $allParameters)) {
                 if (count($requiredAttr) > 0) {
                     return error("Property $name is required.");
@@ -86,15 +86,6 @@ abstract class Action
         }
 
         return new Response(200);
-    }
-
-    private function collectParameters(Request $request): array
-    {
-        return array_merge(
-            $request->getGet(),
-            $request->getPost(),
-            $request->getServer()
-        );
     }
 
     /**

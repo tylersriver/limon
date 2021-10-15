@@ -2,33 +2,10 @@
 
 namespace Yocto;
 
+use Attribute;
+
 class Request
 {
-    /**
-     * @var array
-     */
-    private array $get;
-
-    /**
-     * @var array
-     */
-    private array $post;
-
-    /**
-     * @var array
-     */
-    private array $request;
-
-    /**
-     * @var array
-     */
-    private array $server;
-
-    /**
-     * @var array
-     */
-    private array $files;
-
     /**
      * @var string
      */
@@ -40,6 +17,11 @@ class Request
     private string $uri;
 
     /**
+     * @var string[]
+     */
+    private array $attributes = [];
+
+    /**
      * Request constructor.
      *
      * @param array $get
@@ -49,19 +31,22 @@ class Request
      * @param array $files
      */
     public function __construct(
-        array $get = [],
-        array $post = [],
-        array $server = [],
-        array $request = [],
-        array $files = []
+        private array $get = [],
+        private array $post = [],
+        private array $server = [],
+        private array $request = [],
+        private array $files = [],
+        private array $headers = []
     ) {
         $this->files = $files;
         $this->get = $get;
         $this->post = $post;
         $this->request = $request;
         $this->server = $server;
+
         $this->method = $server['REQUEST_METHOD'] ?? 'GET';
         $this->uri = explode('?', $server['REQUEST_URI'])[0];
+        $this->headers = $headers;
     }
 
     /**
@@ -69,7 +54,7 @@ class Request
      */
     public static function fromGlobals(): self
     {
-        return new self($_GET, $_POST, $_SERVER, $_REQUEST, $_FILES);
+        return new self($_GET, $_POST, $_SERVER, $_REQUEST, $_FILES, getallheaders());
     }
 
     /**
@@ -126,5 +111,35 @@ class Request
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setAttribute(string $key, $value): void
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    public function withParsedBody(): Request
+    {
+        if (
+            isset($this->headers['Content-Type'])
+            && in_array($this->headers['Content-Type'], ['json', 'application/json', 'text/json'])
+        ) {
+            $inputJSON = file_get_contents('php://input');
+            if ($inputJSON === false) {
+                return $this;
+            }
+            $input = json_decode($inputJSON, true);
+            $this->post = array_merge($this->post, $input);
+        }
+
+        return $this;
     }
 }

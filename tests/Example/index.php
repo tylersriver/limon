@@ -5,7 +5,8 @@ use Yocto\Container;
 use Yocto\Views;
 use Yocto\Router;
 use Yocto\App;
-use Yocto\Tests\App\Actions\AnotherAction;
+use Yocto\Response;
+use Yocto\Tests\App\Actions\FooAction;
 use Yocto\Tests\App\Actions\SampleAction;
 
 use function Yocto\emit;
@@ -33,10 +34,17 @@ $container = new Container([
 $app = App::create($container);
 
 $r = new Router($container);
-$r->get('', fn() => redirect('/view/home'));
+$r->get('/api/user/:id/role', fn(Request $request) => success([]));
 $r->get('/', fn() => redirect('/view/home'));
 $r->get('/view/home', fn() => html(render()));
 $r->get('/api/test', SampleAction::class);
+$r->addGroup('/group', function(Router $r) {
+    $r->addGroup('/api', function(Router $r) {
+        $r->get('/:id', fn(Request $request) => success([]));
+        $r->post('/:id/test/:role', SampleAction::class);
+    });
+    $r->get('/place', fn(Request $request) => success([]));
+});
 $app->setRouter($r);
 
 $app->add(new class extends Yocto\Middleware 
@@ -47,7 +55,7 @@ $app->add(new class extends Yocto\Middleware
     }
 });
 
-$request = Request::fromGlobals();
+$request = ( Request::fromGlobals() )->withParsedBody();
 $response = $app->handle($request);
 
 emit($response);

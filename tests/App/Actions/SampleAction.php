@@ -11,15 +11,17 @@ use Yocto\Response;
 
 class SampleAction extends Action
 {
-    #[
-        Parameter(
-            'foo',
-            Parameter::GET,
-            '^bar$',
-        )
-    ]
+    #[Parameter('foo', Parameter::POST, '^bar$')]
     #[Required]
     protected string $foo;
+
+    #[Parameter('id', Parameter::ATTRIBUTE, '^\d+$')]
+    #[Required]
+    protected string $id;
+    
+    #[Parameter('role', Parameter::ATTRIBUTE, '^\d+$')]
+    #[Required]
+    protected string $role;
 
     private SampleService $controller;
 
