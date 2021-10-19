@@ -194,7 +194,9 @@ if (!function_exists('Yocto\cachedRouter')) {
         /** @var Router */
         $router = $routerCollector(new Router());
         if ($router->hasClosures()) {
-            throw new Exception('Unable to cache routes because the router contains routes that resolve to anonymous functions');
+            throw new Exception(
+                'Unable to cache routes because the router contains routes that resolve to anonymous functions'
+            );
         }
 
         // Create cache and return router
