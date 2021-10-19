@@ -2,6 +2,8 @@
 
 namespace Yocto;
 
+use Closure;
+
 class Router
 {
     private array $routeMap;
@@ -12,6 +14,13 @@ class Router
 
     private array $previousGroup = [];
 
+    private bool $usesClosures = false;
+
+    public function __construct(array $routes = [])
+    {
+        $this->routeMap = $routes;
+    }
+
     /**
      * @param  string|array    $method
      * @param  string          $path
@@ -19,8 +28,12 @@ class Router
      * @return Router
      * @throws \Exception
      */
-    private function addRoute($method, string $path, $class): Router
+    private function addRoute(string|array $method, string $path, string|callable $class): Router
     {
+        if ($class instanceof Closure) {
+            $this->usesClosures = true;
+        }
+
         if (!is_array($method)) {
             $method = [$method];
         }
@@ -59,7 +72,7 @@ class Router
      * @param string   $name
      * @param callable $callback
      */
-    public function addGroup(string $name, callable $callback): void
+    public function group(string $name, callable $callback): void
     {
         $this->previousGroup[] = $this->currentGroup;
         $this->currentGroup .= $name;
@@ -155,7 +168,7 @@ class Router
      * @param  string|callable $class
      * @return Router
      */
-    public function get(string $path, $class)
+    public function get(string $path, string|callable $class)
     {
         return $this->addRoute('GET', $path, $class);
     }
@@ -165,7 +178,7 @@ class Router
      * @param  string|callable $class
      * @return Router
      */
-    public function post(string $path, $class)
+    public function post(string $path, string|callable $class)
     {
         return $this->addRoute('POST', $path, $class);
     }
@@ -175,7 +188,7 @@ class Router
      * @param  string|callable $class
      * @return Router
      */
-    public function put(string $path, $class)
+    public function put(string $path, string|callable $class)
     {
         return $this->addRoute('PUT', $path, $class);
     }
@@ -185,7 +198,7 @@ class Router
      * @param  string|callable $class
      * @return Router
      */
-    public function delete(string $path, $class)
+    public function delete(string $path, string|callable $class)
     {
         return $this->addRoute('DELETE', $path, $class);
     }
@@ -195,8 +208,21 @@ class Router
      * @param  string|callable $class
      * @return Router
      */
-    public function options(string $path, $class)
+    public function options(string $path, string|callable $class)
     {
         return $this->addRoute('OPTIONS', $path, $class);
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoutes(): array
+    {
+        return $this->routeMap;
+    }
+
+    public function hasClosures(): bool
+    {
+        return $this->usesClosures;
     }
 }

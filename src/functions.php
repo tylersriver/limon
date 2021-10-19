@@ -2,6 +2,8 @@
 
 namespace Yocto;
 
+use Exception;
+
 use function function_exists;
 
 if (!function_exists('Yocto\emit')) {
@@ -159,5 +161,52 @@ if (!function_exists('getallheaders')) {
             }
         }
         return $headers;
+    }
+}
+
+if (!function_exists('Yocto\cachedRouter')) {
+    /**
+     * The cachedRouter function exists to wrap the creation of a Router object
+     * and on the first use cache the routes to a file to retrieve the routes
+     * from on future requests.
+     *
+     * @param callable $routerCollector - callable to get an instance of Router with routes
+     * @param array $cacheOptions - data needed to cache the routes in a file
+     */
+    function cachedRouter(callable $routerCollector, array $cacheOptions): Router
+    {
+        $cacheEnabled = (bool)(isset($cacheOptions['cacheEnabled']) ? $cacheOptions['cacheEnabled'] : false);
+     
+        // Cache dir must be supplied at least when cache is enabled
+        if ($cacheEnabled && !isset($cacheOptions['cacheDir'])) {
+            throw new \Exception('Cache dir is required in $cacheOptions when cache is enabled');
+        }
+        $cacheDir = $cacheOptions['cacheDir'];
+        $cacheFilePath = $cacheDir . '/routes.php';
+
+        // Get cached routes if exist
+        if ($cacheEnabled && file_exists($cacheFilePath)) {
+            $routesArray = require $cacheFilePath;
+            return new Router($routesArray);
+        }
+
+        // Otherwise call collector and cache
+        /** @var Router */
+        $router = $routerCollector(new Router());
+        if ($router->hasClosures()) {
+            throw new Exception('Unable to cache routes because the router contains routes that resolve to anonymous functions');
+        }
+
+        // Create cache and return router
+        if (!is_dir($cacheDir)) {
+            $created = mkdir($cacheDir, 0775, true);
+            if ($created === false) {
+                throw new \Exception('The cache directory is not writable ' . $cacheDir);
+            }
+        }
+        $routesArr = $router->getRoutes();
+        file_put_contents($cacheFilePath, '<?php return ' . var_export($routesArr, true) . ';');
+
+        return $router;
     }
 }

@@ -5,22 +5,17 @@ use Yocto\Container;
 use Yocto\Views;
 use Yocto\Router;
 use Yocto\App;
-use Yocto\Response;
-use Yocto\Tests\App\Actions\FooAction;
 use Yocto\Tests\App\Actions\SampleAction;
 
+use function Yocto\cachedRouter;
 use function Yocto\emit;
-use function Yocto\redirect;
-use function Yocto\html;
-use function Yocto\render;
-use function Yocto\success;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 $config = [ 
     'ENVIRONMENT' => 'DEVELOPMENT',
     'root' => '//localhost/',          
-    'log_dir' => __DIR__ . '\\log\\'  
+    'log_dir' => __DIR__ . '\\log\\',
 ];
 
 error_reporting($config['ENVIRONMENT'] === 'DEVELOPMENT'  ? E_ALL : 0); 
@@ -33,18 +28,20 @@ $container = new Container([
 
 $app = App::create($container);
 
-$r = new Router($container);
-$r->get('/api/user/:id/role', fn(Request $request) => success([]));
-$r->get('/', fn() => redirect('/view/home'));
-$r->get('/view/home', fn() => html(render()));
-$r->get('/api/test', SampleAction::class);
-$r->addGroup('/group', function(Router $r) {
-    $r->addGroup('/api', function(Router $r) {
-        $r->get('/:id', fn(Request $request) => success([]));
-        $r->post('/:id/test/:role', SampleAction::class);
+$r = cachedRouter(function(Router $r) {
+    $r->group('/group', function(Router $r) {
+        $r->group('/api', function(Router $r) {
+            $r->post('/:id/test/:role', SampleAction::class);
+        });
     });
-    $r->get('/place', fn(Request $request) => success([]));
-});
+
+    return $r;
+}, [
+    'cacheEnabled' => true,
+    'cacheDir' => __DIR__,
+    'version' => '1'
+]);
+
 $app->setRouter($r);
 
 $app->add(new class extends Yocto\Middleware 

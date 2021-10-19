@@ -53,7 +53,7 @@ class RouterTest extends TestCase
 
     public function testAddGroup()
     {
-        $this->r->addGroup('/group', function (Router $r) {
+        $this->r->group('/group', function (Router $r) {
             $r->get('/index', fn(Request $request) => new Response(200, 'Hi'));
         });
         $this->assertEquals(is_callable($this->r->dispatch(new Request(server: ['REQUEST_URI' => '/group/index']))[0]), true);
@@ -70,7 +70,7 @@ class RouterTest extends TestCase
     {
         $app = $this->getBaseAppInstance();
 
-        $this->r->addGroup('/group', function (Router $r) {
+        $this->r->group('/group', function (Router $r) {
             $r->get('/index', fn(Request $request) => new Response(200, 'Hi'));
             $r->get('/home', 'ClassThatDoesntExist');
             $r->get('/some', FooAction::class);
