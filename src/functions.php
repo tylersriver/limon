@@ -178,7 +178,7 @@ if (!function_exists('Yocto\cachedRouter')) {
         $cacheEnabled = (bool)(isset($cacheOptions['cacheEnabled']) ? $cacheOptions['cacheEnabled'] : false);
 
         // If cache disabled create router and exit
-        if($cacheEnabled === false) {
+        if ($cacheEnabled === false) {
             return $routerCollector(new Router());
         }
 
