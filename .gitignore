@@ -2,4 +2,4 @@
 vendor/
 .phpunit.result.cache
 coverage/
-tests/Example/routes.php
+tests/Example/routes*

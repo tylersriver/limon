@@ -182,7 +182,8 @@ if (!function_exists('Yocto\cachedRouter')) {
             throw new \Exception('Cache dir is required in $cacheOptions when cache is enabled');
         }
         $cacheDir = $cacheOptions['cacheDir'];
-        $cacheFilePath = $cacheDir . '/routes.php';
+        $version = $cacheOptions['version'] ?? 1;
+        $cacheFilePath = $cacheDir . "/routesV$version.php";
 
         // Get cached routes if exist
         if ($cacheEnabled && file_exists($cacheFilePath)) {
