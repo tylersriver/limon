@@ -5,6 +5,7 @@ use Yocto\Container;
 use Yocto\Views;
 use Yocto\Router;
 use Yocto\App;
+use Yocto\Tests\App\Actions\HomeAction;
 use Yocto\Tests\App\Actions\SampleAction;
 
 use function Yocto\cachedRouter;
@@ -29,6 +30,8 @@ $container = new Container([
 $app = App::create($container);
 
 $r = cachedRouter(function(Router $r) {
+    $r->get('', HomeAction::class);
+    $r->get('/', HomeAction::class);
     $r->group('/group', function(Router $r) {
         $r->group('/api', function(Router $r) {
             $r->post('/:id/test/:role', SampleAction::class);
@@ -37,7 +40,7 @@ $r = cachedRouter(function(Router $r) {
 
     return $r;
 }, [
-    'cacheEnabled' => false,
+    'cacheEnabled' => true,
     'cacheDir' => __DIR__,
     'version' => 1
 ]);

@@ -176,9 +176,14 @@ if (!function_exists('Yocto\cachedRouter')) {
     function cachedRouter(callable $routerCollector, array $cacheOptions): Router
     {
         $cacheEnabled = (bool)(isset($cacheOptions['cacheEnabled']) ? $cacheOptions['cacheEnabled'] : false);
-     
+
+        // If cache disabled create router and exit
+        if($cacheEnabled === false) {
+            return $routerCollector(new Router());
+        }
+
         // Cache dir must be supplied at least when cache is enabled
-        if ($cacheEnabled && !isset($cacheOptions['cacheDir'])) {
+        if (!isset($cacheOptions['cacheDir'])) {
             throw new \Exception('Cache dir is required in $cacheOptions when cache is enabled');
         }
         $cacheDir = $cacheOptions['cacheDir'];
@@ -186,7 +191,7 @@ if (!function_exists('Yocto\cachedRouter')) {
         $cacheFilePath = $cacheDir . "/routesV$version.php";
 
         // Get cached routes if exist
-        if ($cacheEnabled && file_exists($cacheFilePath)) {
+        if (file_exists($cacheFilePath)) {
             $routesArray = require $cacheFilePath;
             return new Router($routesArray);
         }
