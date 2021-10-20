@@ -207,6 +207,8 @@ class Response
      */
     public function toJson(): string
     {
+        $res = [];
+
         if ($this->body != '') {
             $res['data'] = $this->body;
         }
