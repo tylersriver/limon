@@ -207,11 +207,6 @@ class Response
      */
     public function toJson(): string
     {
-        $res = [
-            'status' => $this->status,
-            'reason' => $this->getReasonPhrase(),
-        ];
-
         if ($this->body != '') {
             $res['data'] = $this->body;
         }
