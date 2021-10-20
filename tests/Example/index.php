@@ -40,7 +40,7 @@ $r = cachedRouter(function(Router $r) {
 
     return $r;
 }, [
-    'cacheEnabled' => true,
+    'cacheEnabled' => false,
     'cacheDir' => __DIR__,
     'version' => 1
 ]);
