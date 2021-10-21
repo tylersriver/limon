@@ -30,7 +30,8 @@ $container = new Container([
 $app = App::create($container);
 
 $r = cachedRouter(function(Router $r) {
-    $r->get('', HomeAction::class);
+    $r->loadFromAttributes(__DIR__ . '/../App/Actions', 'Yocto\Tests\App\Actions');
+
     $r->get('/', HomeAction::class);
     $r->group('/group', function(Router $r) {
         $r->group('/api', function(Router $r) {

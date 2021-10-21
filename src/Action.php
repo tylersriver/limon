@@ -70,7 +70,7 @@ abstract class Action
             $pattern = $parameterAttr->pattern;
             $valid = preg_match("/$pattern/", $value);
             if ($valid === 0 or $valid === false) {
-                return new Response(500, "Property $name is invalid.");
+                return error("Property $name is invalid.");
             }
 
             // Set the type

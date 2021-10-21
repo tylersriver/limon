@@ -9,6 +9,8 @@ use Yocto\Attributes\Parameter;
 use Yocto\Attributes\Required;
 use Yocto\Response;
 
+use function Yocto\success;
+
 class SampleAction extends Action
 {
     #[Parameter('foo', Parameter::POST, '^bar$')]
@@ -32,6 +34,6 @@ class SampleAction extends Action
 
     public function action(): Response
     {
-        return new Response(200, ['message' => $this->controller->getFoo()]);
+        return success(['message' => $this->controller->getFoo()]);
     }
 }

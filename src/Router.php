@@ -3,6 +3,8 @@
 namespace Yocto;
 
 use Closure;
+use ReflectionClass;
+use Yocto\Attributes\Route;
 
 class Router
 {
@@ -61,6 +63,43 @@ class Router
             }
 
             $current = $class;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $actionDir directory that has the action classes
+     * @return Router
+     */
+    public function loadFromAttributes(string $actionDir, string $namespace): Router
+    {
+        // Get list of Action classes
+        $classes = glob($actionDir . '/*.php');
+        if ($classes === false) {
+            return $this;
+        }
+
+        // Loop classes
+        foreach ($classes as $class) {
+            // create fqcn
+            $classParts = explode('/', $class);
+            $class = $namespace . '\\' . substr(end($classParts), 0, -4);
+            if (class_exists($class) === false) {
+                continue;
+            }
+
+            // Get Route attribute if exists
+            $reflection = new ReflectionClass($class);
+            $attributes = $reflection->getAttributes(Route::class);
+            if (count($attributes) <= 0) {
+                continue;
+            }
+
+            // Create the route
+            /** @var Route */
+            $route = $attributes[0]->newInstance();
+            $this->addRoute($route->method, $route->route, $class);
         }
 
         return $this;
@@ -155,12 +194,11 @@ class Router
         }
 
         // If the route is not callable we assume class
-        // This has the benefit of having the container passed to the constructor
         if (!class_exists($routeExecutable)) {
             return null;
         }
 
-        return [container()->get($routeExecutable), $route[1]];
+        return [get($routeExecutable), $route[1]];
     }
 
     /**

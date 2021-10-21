@@ -32,7 +32,7 @@ class ActionTest extends TestCase
         /** @var Response */
         $response = $action($request);
 
-        $this->assertEquals(500, $response->getStatus());
+        $this->assertEquals(400, $response->getStatus());
     }
 
     public function testInvalidAnotationAction(): void

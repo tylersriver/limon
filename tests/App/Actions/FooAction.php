@@ -5,8 +5,12 @@ namespace Yocto\Tests\App\Actions;
 use Yocto\Action;
 use Yocto\Attributes\Parameter;
 use Yocto\Attributes\Required;
+use Yocto\Attributes\Route;
 use Yocto\Response;
 
+use function Yocto\success;
+
+#[Route(Route::GET, '/foo/action')]
 class FooAction extends Action
 {
     #[Parameter('foo', Parameter::GET, '^bar$')]
@@ -15,6 +19,6 @@ class FooAction extends Action
 
     public function action(): Response
     {
-        return new Response(200, ['message' => 'success']);
+        return success(['message' => 'success']);
     }
 }
