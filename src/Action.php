@@ -7,20 +7,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class Action
 {
-    /**
-     * @var Request
-     */
     protected ServerRequestInterface $request;
 
-    /**
-     * @var Container
-     */
     protected Container $container;
 
-    /**
-     * @param  Request $request
-     * @return ResponseInterface
-     */
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
         $this->request = $request;

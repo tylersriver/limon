@@ -2,7 +2,7 @@
 
 namespace Yocto\Attributes;
 
-use Yocto\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Parameter
@@ -17,21 +17,5 @@ final class Parameter
         public string $in,
         public string $pattern,
     ) {
-    }
-
-    public function getSearchArray(Request $request): array
-    {
-        switch ($this->in) {
-            case self::GET:
-                return $request->getGet();
-            case self::POST:
-                return $request->getPost();
-            case self::SERVER:
-                return $request->getServer();
-            case self::ATTRIBUTE:
-                return $request->getAttributes();
-        }
-
-        return [];
     }
 }

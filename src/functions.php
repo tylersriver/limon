@@ -45,7 +45,7 @@ if (!function_exists('Yocto\emit')) {
             }
         }
 
-        if($die) {
+        if ($die) {
             exit;
         }
     }

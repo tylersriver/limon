@@ -3,6 +3,7 @@
 namespace Yocto;
 
 use Closure;
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use Yocto\Attributes\Route;
 
@@ -121,17 +122,13 @@ class Router
         $this->currentGroup = array_pop($this->previousGroup);
     }
 
-    /**
-     * @param  Request $request
-     * @return array|null
-     */
-    public function parseRoute(Request $request): ?array
+    public function parseRoute(ServerRequestInterface $request): ?array
     {
         // Grab URI
         $uri = $request->getUri();
 
         // split URI by /
-        $uriParts = explode('/', $uri);
+        $uriParts = explode('/', $uri->getPath());
         unset($uriParts[0]);
 
         // Place method at front
@@ -175,10 +172,10 @@ class Router
     }
 
     /**
-     * @param  Request $request
+     * @param  ServerRequestInterface $request
      * @return array|null
      */
-    public function dispatch(Request $request): ?array
+    public function dispatch(ServerRequestInterface $request): ?array
     {
         // Determine the route
         $route = $this->parseRoute($request);
@@ -198,7 +195,7 @@ class Router
             return null;
         }
 
-        return [get($routeExecutable), $route[1]];
+        return [$routeExecutable, $route[1]];
     }
 
     /**

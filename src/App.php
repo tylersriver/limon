@@ -3,7 +3,6 @@
 namespace Yocto;
 
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -13,7 +12,6 @@ class App
     private RequestHandlerInterface $applicationStack;
 
     private function __construct(
-        private ContainerInterface $container,
         RequestHandlerInterface $kernel
     ) {
         $this->applicationStack = $kernel;
