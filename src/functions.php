@@ -15,14 +15,6 @@ if (!function_exists('Yocto\emit')) {
      */
     function emit(ResponseInterface $response, bool $die = true): void
     {
-        // Set status
-        header(sprintf(
-            'HTTP/%s %s %s',
-            $response->getProtocolVersion(),
-            $response->getStatusCode(),
-            $response->getReasonPhrase()
-        ), true, $response->getStatusCode());
-
         // Additional headers
         foreach ($response->getHeaders() as $name => $values) {
             $first = strtolower($name) !== 'set-cookie';
@@ -32,6 +24,14 @@ if (!function_exists('Yocto\emit')) {
                 $first = false;
             }
         }
+        
+        // Set status
+        header(sprintf(
+            'HTTP/%s %s %s',
+            $response->getProtocolVersion(),
+            $response->getStatusCode(),
+            $response->getReasonPhrase()
+        ), true, $response->getStatusCode());
 
         // Output body and end request
         $body = $response->getBody();
