@@ -3,6 +3,7 @@
 namespace Yocto;
 
 use Exception;
+use Psr\Http\Message\ResponseInterface;
 
 use function function_exists;
 
@@ -10,157 +11,43 @@ if (!function_exists('Yocto\emit')) {
     /**
      * Emit the response to the client
      *
-     * @param Response $response
+     * @param ResponseInterface $response
      */
-    function emit(Response $response): void
+    function emit(ResponseInterface $response, bool $die = true): void
     {
         // Set status
-        http_response_code($response->getStatus());
+        header(sprintf(
+            'HTTP/%s %s %s',
+            $response->getProtocolVersion(),
+            $response->getStatusCode(),
+            $response->getReasonPhrase()
+        ), true, $response->getStatusCode());
 
         // Additional headers
-        foreach ($response->getHeaders() as $name => $value) {
-            header("$name: $value", false);
+        foreach ($response->getHeaders() as $name => $values) {
+            $first = strtolower($name) !== 'set-cookie';
+            foreach ($values as $value) {
+                $header = sprintf('%s: %s', $name, $value);
+                header($header, $first);
+                $first = false;
+            }
         }
 
         // Output body and end request
-        echo
-            $response->isJsonResponse()
-                ? $response->toJson()
-                : $response->getBody();
-
-        exit;
-    }
-}
-
-if (!function_exists('Yocto\redirect')) {
-    /**
-     * Simplified redirect response creation
-     *
-     * @param  string $location
-     * @return Response
-     */
-    function redirect(string $location): Response
-    {
-        return new Response(302, '', ['Location' => $location]);
-    }
-}
-
-if (!function_exists('Yocto\error')) {
-    /**
-     * Simplified error response creation
-     *
-     * @param  string|array $error
-     * @return Response
-     */
-    function error(string|array $error): Response
-    {
-        $res = new Response(400);
-        if (is_array($error)) {
-            $res->setErrors($error);
-        } else {
-            $res->withError($error);
+        $body = $response->getBody();
+        if ($body->isSeekable()) {
+            $body->rewind();
         }
-        return $res;
-    }
-}
-
-if (!function_exists('Yocto\fail')) {
-    /**
-     * Simplified error response creation
-     *
-     * @param  string|array $error
-     * @return Response
-     */
-    function fail(string|array $error): Response
-    {
-        $res = new Response(500);
-        if (is_array($error)) {
-            $res->setErrors($error);
-        } else {
-            $res->withError($error);
-        }
-        return $res;
-    }
-}
-
-if (!function_exists('Yocto\success')) {
-    /**
-     * Simplified success response creation
-     *
-     * @param  string|array $body
-     * @return Response
-     */
-    function success(string|array $body): Response
-    {
-        return new Response(200, $body);
-    }
-}
-
-if (!function_exists('Yocto\html')) {
-    /**
-     * Simplified html response creation
-     *
-     * @param  string $body
-     * @return Response
-     */
-    function html(string $body): Response
-    {
-        return (new Response(200, $body))->htmlResponse();
-    }
-}
-
-if (!function_exists('Yocto\container')) {
-    /**
-     * @return Container
-     */
-    function container(): Container
-    {
-        return App::getInstance()->getContainer();
-    }
-}
-
-if (!function_exists('Yocto\get')) {
-    /**
-     * Simplify container()->get() command
-     *
-     * @param  string $name
-     * @return mixed
-     */
-    function get(string $name)
-    {
-        return container()->get($name);
-    }
-}
-
-if (!function_exists('Yocto\render')) {
-    /**
-     * Simplify retrieving Views instance
-     *
-     * @param  string $viewName
-     * @param  array  $params
-     * @return string
-     * @throws \Exception
-     */
-    function render(string $viewName = 'index', array $params = []): string
-    {
-        if (!container()->has(Views::class)) {
-            throw new \Exception('Application container does not have an instance of "Framework\Views"');
-        }
-
-        return get(Views::class)->render($viewName, $params);
-    }
-}
-
-if (!function_exists('getallheaders')) {
-    function getallheaders(): array
-    {
-        $headers = [];
-        foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) == 'HTTP_') {
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+        while (!$body->eof()) {
+            echo $body->read(4096);
+            if (connection_status() !== CONNECTION_NORMAL) {
+                break;
             }
         }
-        return $headers;
+
+        if($die) {
+            exit;
+        }
     }
 }
 

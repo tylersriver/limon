@@ -1,15 +1,30 @@
 <?php
 
 namespace Yocto;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-abstract class Middleware
+class Middleware implements RequestHandlerInterface
 {
-    protected Middleware $next;
+    protected RequestHandlerInterface $next;
 
-    abstract public function process(Request $request): Response;
+    protected MiddlewareInterface $middleware;
 
-    public function setNext(Middleware $middleware): void
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        $this->next = $middleware;
+        return $this->handle($request);
+    }
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return $this->middleware->process($request, $this->next);
+    }
+
+    public function __construct(MiddlewareInterface $middleware, RequestHandlerInterface $next): void
+    {
+        $this->middleware = $middleware;
+        $this->next = $next;
     }
 }
