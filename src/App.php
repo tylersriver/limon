@@ -12,7 +12,7 @@ class App
     private RequestHandlerInterface $applicationStack;
 
     private function __construct(
-        RequestHandlerInterface $kernel
+        Kernel $kernel
     ) {
         $this->applicationStack = $kernel;
     }

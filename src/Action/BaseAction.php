@@ -1,15 +1,13 @@
 <?php
 
-namespace Yocto;
+namespace Yocto\Action;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-abstract class Action
+abstract class BaseAction implements ActionInterface
 {
     protected ServerRequestInterface $request;
-
-    protected Container $container;
 
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
@@ -20,4 +18,6 @@ abstract class Action
     abstract public function action(): ResponseInterface;
 
     abstract public function validate(): bool;
+
+    abstract public function access(): bool;
 }

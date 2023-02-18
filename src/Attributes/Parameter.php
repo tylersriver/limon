@@ -2,8 +2,6 @@
 
 namespace Yocto\Attributes;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Parameter
 {
