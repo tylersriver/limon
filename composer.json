@@ -18,7 +18,7 @@
         "@md",
         "@unit"
       ],
-      "unit": "phpunit",
+      "unit": "pest --coverage",
       "github-action-phpunit": "phpunit --no-coverage",
       "stan": "phpstan analyse src --memory-limit=-1",
       "sniff": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s --colors src/",
@@ -36,7 +36,10 @@
         "psr/log": "^3.0"
     },
     "config": {
-      "sort-packages": true
+      "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "autoload": {
       "psr-4": {
@@ -54,9 +57,10 @@
     },
     "require-dev": {
         "jakub-onderka/php-console-highlighter": "^0.4.0",
+        "mockery/mockery": "^1.5",
+        "pestphp/pest": "^1.22",
         "phpmd/phpmd": "^2.8",
         "phpstan/phpstan": "^1.4",
-        "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.6"
     }
   }

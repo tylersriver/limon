@@ -11,7 +11,7 @@ class App
 {
     private RequestHandlerInterface $applicationStack;
 
-    private function __construct(
+    public function __construct(
         Kernel $kernel
     ) {
         $this->applicationStack = $kernel;
