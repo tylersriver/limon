@@ -12,7 +12,7 @@ if (!function_exists('Yocto\emit')) {
      *
      * @param ResponseInterface $response
      */
-    function emit(ResponseInterface $response, bool $die = true): void
+    function emit(ResponseInterface $response): void
     {
         // Additional headers
         foreach ($response->getHeaders() as $name => $values) {
@@ -42,10 +42,6 @@ if (!function_exists('Yocto\emit')) {
             if (connection_status() !== CONNECTION_NORMAL) {
                 break;
             }
-        }
-
-        if ($die) {
-            exit;
         }
     }
 }

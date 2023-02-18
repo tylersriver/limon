@@ -10,7 +10,6 @@ class KernelEvent
     public function __construct(
         public readonly ServerRequestInterface $request,
         public readonly ?ResponseInterface $response = null
-    ){
-        
+    ) {
     }
 }

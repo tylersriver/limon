@@ -4,6 +4,7 @@ namespace Yocto\Handler;
 
 use Psr\Container\ContainerInterface;
 use Throwable;
+use Yocto\Action\ActionInterface;
 
 class ContainerResolver implements HandlerResolverInterface
 {
@@ -14,15 +15,20 @@ class ContainerResolver implements HandlerResolverInterface
         $this->container = $container;
     }
 
-    public function resolve(string $handler)
+    public function resolve(string $handler): ActionInterface
     {
-        if(!$this->container->has($handler)) {
+        if (!$this->container->has($handler)) {
             throw new HandlerNotFoundException($handler);
         }
 
         try {
-            return $this->container->get($handler);
-        } catch(Throwable $e) {
+            $action = $this->container->get($handler);
+            if (!$action instanceof ActionInterface) {
+                throw new InvalidHandlerException();
+            }
+
+            return $action;
+        } catch (Throwable $e) {
             throw new FailedToCreateHandlerException($handler, $e);
         }
     }
