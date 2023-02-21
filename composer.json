@@ -56,7 +56,6 @@
       }
     },
     "require-dev": {
-        "jakub-onderka/php-console-highlighter": "^0.4.0",
         "mockery/mockery": "^1.5",
         "pestphp/pest": "^1.22",
         "phpmd/phpmd": "^2.8",
