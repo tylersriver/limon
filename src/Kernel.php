@@ -39,7 +39,7 @@ class Kernel implements RequestHandlerInterface
         // to an ActionInterface instance, all other options are not valid
         $requestHandler = $request->getAttribute('request-handler', null);
         if (!is_string($requestHandler)) {
-            throw new HandlerAttributeNotSetException('request-handler Attribute must be set in the Request object');
+            throw new HandlerAttributeNotSetException('request-handler Attribute must be set in the Request object and be a string');
         }
 
         // Resolve the handler callable, exceptions should be handled
