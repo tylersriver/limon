@@ -1,8 +1,8 @@
 <?php
 
-namespace Yocto\Handler;
+namespace Yocto\Handler\Exception;
 
-class HandlerNotFoundException extends \Exception
+class HandlerNotFoundException extends HandlerException
 {
     private string $handlerName;
 

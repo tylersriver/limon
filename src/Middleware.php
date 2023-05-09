@@ -13,11 +13,6 @@ class Middleware implements RequestHandlerInterface
 
     protected MiddlewareInterface $middleware;
 
-    public function __invoke(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->handle($request);
-    }
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->middleware->process($request, $this->next);

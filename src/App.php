@@ -9,12 +9,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class App
 {
-    private RequestHandlerInterface $applicationStack;
-
     public function __construct(
-        Kernel $kernel
+        private RequestHandlerInterface $applicationEntry
     ) {
-        $this->applicationStack = $kernel;
     }
 
     /**
@@ -22,7 +19,7 @@ class App
      */
     public function use(MiddlewareInterface $middleware): void
     {
-        $this->applicationStack = new Middleware($middleware, $this->applicationStack);
+        $this->applicationEntry = new Middleware($middleware, $this->applicationEntry);
     }
 
     /**
@@ -31,6 +28,6 @@ class App
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->applicationStack->handle($request);
+        return $this->applicationEntry->handle($request);
     }
 }

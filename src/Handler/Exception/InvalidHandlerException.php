@@ -1,10 +1,10 @@
 <?php
 
-namespace Yocto\Handler;
+namespace Yocto\Handler\Exception;
 
 use Yocto\Action\ActionInterface;
 
-class InvalidHandlerException extends \Exception
+class InvalidHandlerException extends HandlerException
 {
     public function __construct()
     {

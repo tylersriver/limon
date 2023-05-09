@@ -3,6 +3,9 @@
 namespace Yocto\Handler;
 
 use Yocto\Action\ActionInterface;
+use Yocto\Handler\Exception\InvalidHandlerException;
+use Yocto\Handler\Exception\HandlerNotFoundException;
+use Yocto\Handler\Exception\FailedToCreateHandlerException;
 
 interface HandlerResolverInterface
 {

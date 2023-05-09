@@ -1,11 +1,10 @@
 <?php
 
-namespace Yocto\Handler;
+namespace Yocto\Handler\Exception;
 
-use Exception;
 use Throwable;
 
-class FailedToCreateHandlerException extends Exception
+class FailedToCreateHandlerException extends HandlerException
 {
     private string $handlerName;
 

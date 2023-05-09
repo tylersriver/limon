@@ -2,9 +2,12 @@
 
 namespace Yocto\Handler;
 
-use Psr\Container\ContainerInterface;
 use Throwable;
 use Yocto\Action\ActionInterface;
+use Psr\Container\ContainerInterface;
+use Yocto\Handler\Exception\InvalidHandlerException;
+use Yocto\Handler\Exception\HandlerNotFoundException;
+use Yocto\Handler\Exception\FailedToCreateHandlerException;
 
 class ContainerResolver implements HandlerResolverInterface
 {
