@@ -17,11 +17,13 @@ it('emits response', function() {
     $body = Mockery::mock(StreamInterface::class);
     $body->allows('isSeekable')->once()->andReturns(true);
     $body->allows('rewind')->once();
-    $body->allows('eof')->once()->andReturns(true);
+    $body->allows('read')->once()->andReturns('output');
+    $body->allows('eof')->twice()->andReturns(false, true);
     $response->allows('getBody')->once()->andReturns($body);
 
     ob_flush();
     ob_start();
     emit($response);
     $body = ob_get_clean();
+    expect($body)->toEqual('output');
 });
