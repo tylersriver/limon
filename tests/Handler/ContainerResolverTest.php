@@ -1,10 +1,10 @@
 <?php
 
-use Yocto\Action\ActionInterface;
 use Yocto\Handler\ContainerResolver;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Yocto\Action;
 use Yocto\Handler\Exception\InvalidHandlerException;
 use Yocto\Handler\Exception\HandlerNotFoundException;
 use Yocto\Handler\Exception\FailedToCreateHandlerException;
@@ -56,10 +56,10 @@ it('throws FailedToCreateHandlerException and HandlerName and exception are set'
     }
 });
 
-it('returns ActionInterface Instance', function() {
+it('returns Action Instance', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $container->allows('has')->once()->with('test-handler')->andReturns('true');
-    $container->allows('get')->once()->with('test-handler')->andReturns(new class implements ActionInterface {
+    $container->allows('get')->once()->with('test-handler')->andReturns(new class implements Action {
         public function __invoke(ServerRequestInterface $request): ResponseInterface
         {
             return Mockery::mock(ResponseInterface::class);
@@ -69,5 +69,5 @@ it('returns ActionInterface Instance', function() {
     $resolver = new ContainerResolver($container);
 
     $obj = $resolver->resolve('test-handler');
-    expect($obj)->toBeInstanceOf(ActionInterface::class);
+    expect($obj)->toBeInstanceOf(Action::class);
 });

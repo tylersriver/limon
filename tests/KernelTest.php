@@ -1,17 +1,17 @@
 <?php
 
 use Yocto\Kernel;
-use Yocto\Action\ActionInterface;
 use Yocto\Handler\ContainerResolver;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Yocto\Action;
 use Yocto\Handler\Exception\HandlerAttributeNotSetException;
 
 it('calls kernel handle', function() {
     $response = Mockery::mock(ResponseInterface::class);
 
-    $action = Mockery::mock(ActionInterface::class);
+    $action = Mockery::mock(Action::class);
     $action->allows('__invoke')->once()->withAnyArgs()->andReturns($response);
 
     $dispatcher = Mockery::mock(EventDispatcherInterface::class);
@@ -59,7 +59,7 @@ it('throws HandlerAttributeNotSetException', function() {
 it('throws exception during handle', function() {
     $response = Mockery::mock(ResponseInterface::class);
 
-    $action = Mockery::mock(ActionInterface::class);
+    $action = Mockery::mock(Action::class);
     $action->allows('__invoke')->once()->withAnyArgs()->andThrow(new \Exception('test message'));
 
     $dispatcher = Mockery::mock(EventDispatcherInterface::class);

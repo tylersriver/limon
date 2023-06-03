@@ -1,11 +1,11 @@
 <?php
 
-namespace Yocto\Action;
+namespace Yocto;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-interface ActionInterface
+interface Action
 {
     public function __invoke(ServerRequestInterface $request): ResponseInterface;
 }
