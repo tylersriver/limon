@@ -2,7 +2,7 @@
 
 namespace Yocto\Handler;
 
-use Yocto\Action;
+use Psr\Http\Message\ServerRequestInterface;
 use Yocto\Handler\Exception\InvalidHandlerException;
 use Yocto\Handler\Exception\HandlerNotFoundException;
 use Yocto\Handler\Exception\FailedToCreateHandlerException;
@@ -14,5 +14,5 @@ interface HandlerResolverInterface
      * @throws FailedToCreateHandlerException
      * @throws InvalidHandlerException
      */
-    public function resolve(string $handler): Action;
+    public function resolve(ServerRequestInterface $handler): callable;
 }

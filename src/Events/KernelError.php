@@ -3,19 +3,20 @@
 namespace Yocto\Events;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use Yocto\Action;
 
 class KernelError extends KernelEvent
 {
     public function __construct(
         ServerRequestInterface $request,
-        private ?Action $handler = null,
+        private Throwable $error,
     ) {
         parent::__construct($request);
     }
 
-    public function getHandler(): ?Action
+    public function getError(): Throwable
     {
-        return $this->handler;
+        return $this->error;
     }
 }

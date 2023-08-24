@@ -20,7 +20,7 @@ class Kernel implements RequestHandlerInterface
 {
     public function __construct(
         private HandlerResolverInterface $resolver,
-        private EventDispatcherInterface $eventDispatcher
+        private ?EventDispatcherInterface $eventDispatcher = null
     ) {
     }
 
@@ -33,29 +33,20 @@ class Kernel implements RequestHandlerInterface
     /** @SuppressWarnings(PHPMD) */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->eventDispatcher->dispatch(new KernelRequest($request));
-
-        // We only accept request-handler as a string to resolve
-        // to an ActionInterface instance, all other options are not valid
-        $requestHandler = $request->getAttribute('request-handler', null);
-        if (!is_string($requestHandler)) {
-            throw new HandlerAttributeNotSetException(
-                'request-handler Attribute must be set in the Request object and be a string'
-            );
-        }
+        $this->eventDispatcher?->dispatch(new KernelRequest($request));
 
         // Resolve the handler callable, exceptions should be handled
         // elsewhere in middleware
-        $handler = $this->resolver->resolve($requestHandler);
-        $this->eventDispatcher->dispatch(new KernelAction($request));
+        $handler = $this->resolver->resolve($request);
+        $this->eventDispatcher?->dispatch(new KernelAction($request));
 
         // Try the handler, when error dispatch event and re-throw
         try {
             $response = $handler($request);
-            $this->eventDispatcher->dispatch(new KernelResponse($request, $response));
+            $this->eventDispatcher?->dispatch(new KernelResponse($request, $response));
             return $response;
         } catch (\Throwable $e) {
-            $this->eventDispatcher->dispatch(new KernelError($request, $handler));
+            $this->eventDispatcher?->dispatch(new KernelError($request, $e));
             throw $e;
         }
     }
