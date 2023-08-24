@@ -1,16 +1,16 @@
 <?php
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Yocto\App;
-use Yocto\Handler\ContainerResolver;
 use Yocto\Kernel;
+use Yocto\Handler\ActionResolver;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 it('can create app', function() {
     $app = new App(new Kernel(
-        Mockery::mock(ContainerResolver::class),
+        Mockery::mock(ActionResolver::class),
         Mockery::mock(EventDispatcherInterface::class)
     ));
 

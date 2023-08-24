@@ -14,12 +14,12 @@ use Yocto\Handler\Exception\HandlerAttributeNotSetException;
 class ActionResolver implements HandlerResolverInterface
 {
     public function __construct(
-       private ?ContainerInterface $container = null
-    ){
+        private ?ContainerInterface $container = null
+    ) {
         $this->container = $container;
     }
 
-    public function resolve(ServerRequestInterface $request): Action
+    public function resolve(ServerRequestInterface $request): callable
     {
         $handler = $request->getAttribute('request-handler');
         if (!is_string($handler)) {
@@ -28,7 +28,7 @@ class ActionResolver implements HandlerResolverInterface
             );
         }
 
-        if($this->container !== null) {
+        if ($this->container !== null) {
             return $this->fromContainer($handler);
         }
 

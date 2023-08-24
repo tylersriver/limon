@@ -1,14 +1,15 @@
 <?php
 
 use Yocto\Kernel;
-use Yocto\Handler\ContainerResolver;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Yocto\Action;
+use Yocto\Handler\ActionResolver;
 use Yocto\Handler\Exception\HandlerAttributeNotSetException;
 
 it('calls kernel handle', function() {
+    
     $response = Mockery::mock(ResponseInterface::class);
 
     $action = Mockery::mock(Action::class);
@@ -16,17 +17,17 @@ it('calls kernel handle', function() {
 
     $dispatcher = Mockery::mock(EventDispatcherInterface::class);
     $dispatcher->allows('dispatch')->times(3)->withAnyArgs();
+    
+    $request = Mockery::mock(ServerRequestInterface::class);
+    $request->allows('getAttribute')->once()->with('request-handler')->andReturn($action::class);
 
-    $resolver = Mockery::mock(ContainerResolver::class);
-    $resolver->allows('resolve')->once()->with($action::class)->andReturns($action);
+    $resolver = Mockery::mock(ActionResolver::class);
+    $resolver->allows('resolve')->once()->with($request)->andReturns($action);
 
     $kernel = new Kernel(
         $resolver,
         $dispatcher
     );
-
-    $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn($action::class);
 
     $response = $kernel->handle($request);
     expect($response)->toBeInstanceOf(ResponseInterface::class);
@@ -40,7 +41,7 @@ it('throws HandlerAttributeNotSetException', function() {
     $dispatcher->allows('dispatch')->once()->withAnyArgs();
 
     $kernel = new Kernel(
-        Mockery::mock(ContainerResolver::class),
+        Mockery::mock(ActionResolver::class),
         $dispatcher
     );
 
@@ -65,7 +66,7 @@ it('throws exception during handle', function() {
     $dispatcher = Mockery::mock(EventDispatcherInterface::class);
     $dispatcher->allows('dispatch')->times(3)->withAnyArgs();
 
-    $resolver = Mockery::mock(ContainerResolver::class);
+    $resolver = Mockery::mock(ActionResolver::class);
     $resolver->allows('resolve')->once()->with($action::class)->andReturns($action);
 
     $kernel = new Kernel(
