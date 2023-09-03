@@ -13,7 +13,7 @@ use Limon\Handler\Exception\HandlerAttributeNotSetException;
 it('throws HandlerAttributeNotSetException', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn(null);
+    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn(null);
 
     $resolver = new ActionResolver($container);
 
@@ -23,7 +23,7 @@ it('throws HandlerAttributeNotSetException', function() {
 it('throws HandlerNotFoundException', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn('test-handler');
+    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn('test-handler');
     $container->allows('has')->once()->with('test-handler')->andReturns(false);
 
     $resolver = new ActionResolver($container);
@@ -34,7 +34,7 @@ it('throws HandlerNotFoundException', function() {
 it('has handler name in HandlerNotFoundException', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn('test-handler');
+    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn('test-handler');
     $container->allows('has')->once()->with('test-handler')->andReturns(false);
 
     $resolver = new ActionResolver($container);
@@ -49,7 +49,7 @@ it('has handler name in HandlerNotFoundException', function() {
 it('throws FailedToCreateHandlerException', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn('test-handler');
+    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn('test-handler');
     $container->allows('has')->once()->with('test-handler')->andReturns('true');
     $container->allows('get')->once()->with('test-handler')->andReturns('fake');
 
@@ -61,7 +61,7 @@ it('throws FailedToCreateHandlerException', function() {
 it('throws FailedToCreateHandlerException and HandlerName and exception are set', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn('test-handler');
+    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn('test-handler');
     $container->allows('has')->once()->with('test-handler')->andReturns('true');
     $container->allows('get')->once()->with('test-handler')->andReturns('fake');
 
@@ -78,7 +78,7 @@ it('throws FailedToCreateHandlerException and HandlerName and exception are set'
 it('returns Action Instance', function() {
     $container = Mockery::mock(ContainerInterface::class);
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn('test-handler');
+    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn('test-handler');
     $container->allows('has')->once()->with('test-handler')->andReturns('true');
     $container->allows('get')->once()->with('test-handler')->andReturns(new class implements Action {
         public function __invoke(ServerRequestInterface $request): ResponseInterface

@@ -19,7 +19,6 @@ it('calls kernel handle', function() {
     $dispatcher->allows('dispatch')->times(3)->withAnyArgs();
     
     $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler')->andReturn($action::class);
 
     $resolver = Mockery::mock(ActionResolver::class);
     $resolver->allows('resolve')->once()->with($request)->andReturns($action);
@@ -40,8 +39,10 @@ it('throws HandlerAttributeNotSetException', function() {
     $dispatcher = Mockery::mock(EventDispatcherInterface::class);
     $dispatcher->allows('dispatch')->once()->withAnyArgs();
 
+    $resolver = new ActionResolver;
+
     $kernel = new Kernel(
-        Mockery::mock(ActionResolver::class),
+        $resolver,
         $dispatcher
     );
 

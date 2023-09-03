@@ -21,7 +21,7 @@ class ActionResolver implements HandlerResolverInterface
 
     public function resolve(ServerRequestInterface $request): callable
     {
-        $handler = $request->getAttribute('request-handler');
+        $handler = $request->getAttribute('request-handler', null);
         if (!is_string($handler)) {
             throw new HandlerAttributeNotSetException(
                 'request-handler Attribute must be set in the Request object and be a string'
