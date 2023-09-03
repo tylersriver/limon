@@ -1,5 +1,5 @@
 {
-    "name": "tylersriver/yocto",
+    "name": "tylersriver/limon",
     "type": "framework",
     "description": "Dependency-less, Simple PHP Framework",
     "license": "MIT",
@@ -52,7 +52,7 @@
     },
     "autoload-dev": {
       "psr-4": {
-        "Yocto\\Tests\\": "tests",
+        "Limon\\Tests\\": "tests",
         "Example\\": "tests/Example"
       }
     },
