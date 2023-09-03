@@ -1,31 +1,42 @@
-# yocto
-Dependency-less PHP Micro Framework with a focus on simplicity to get you up
-and prototyping new APIs and Websites quickly. Comes out of the box
-with Routing, Middleware, View rendering, and a Container with dependency auto-wiring. 
+# Limon
+Dependency-less PHP Micro Framework with a focus on simplicity to get you
+prototyping and delivering new APIs and Websites quickly. 
+
+## Basic Usage
 ```php
+<?php // example basic index.php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-// 1. Create App
-$app = Yocto\App::create();
+(function() {
+    $app = new Limon\App(
+        new Limon\Kernel(
+            new ActionResolver
+        )
+    );
 
-// 2. Create a Route
-$r = new Yocto\Router; 
-$r->get('/test', fn() => Yocto\success(['message' => 'success']));
-$app->setRouter($r);
+    /** @var Psr\Http\Message\ServerRequestInterface $request */
+    $request = captureServerRequest();
 
-// 3. Grab and Handle request
-$request = Yocto\Request::fromGlobals();
-$response = $app->handle($request);
+    // Reguster a handler, this can be replaced 
+    // with middleware that sets the request-handler attribute
+    // with a routing package
+    $request = $request->withAttribute(
+        'requst-handler', 
+        fn(ServerRequestInterface $request) => new Response()
+    );
 
-// 4. Emit the response
-Yocto\emit($response);
+    $res = $app->handle($request);
+
+    Limon\emit($res);
+})();
 ```
 
 # Getting Started
 This getting started is based on XAMPP
 1. Require the composer package
 ```cli
-composer require tylersriver/yocto
+composer require tylersriver/limon
 ```
 2. Create index.php at Apache web root
 3. Create .htaccess with below
@@ -37,31 +48,13 @@ composer require tylersriver/yocto
 </IfModule>
 ```
 
-# Features
-Yocto comes ready to go with a lot of features for you to quickly
-write Web apps.
+# Packages
+Limon adheres to the PSR standards for request, response, middleware handling and can be used with
+any compliant packages. There are some default packages wired to the example skeleton app [here](https://github.com/tylersriver/app)
 
 ## Actions
-Yocto is built around the idea of [ADR](http://pmjones.io/adr/) and includes a base Action class
-that can be extended and used by the router for robust request handling.
-```php
-#[Route(Route::GET, '/foo/action')]                   // <-- You can register routes via the Route attribute, see Router section
-class FooAction extends Yocto\Action
-{
-    public function __construct(Class $dependency)   // <-- Add constructor for auto-wired dependencies
-    {
-    }
-
-    #[Parameter('foo', Parameter::GET, '^bar$')]      // <-- The Parameter attribute to autofill from request and validate
-    #[Required]                                       // <-- Required attribute enforces parameters to exist in request
-    protected string $var;
-
-    public function action(): Response                // <-- Implement action method and return response
-    {
-        return success(['message' => 'success']);
-    }
-}
-```
+Yocto is built around the idea of [ADR](http://pmjones.io/adr/) and includes a base Action interface
+that can be implemented for splitting your http routes into separate objects.
 
 ## Router
 

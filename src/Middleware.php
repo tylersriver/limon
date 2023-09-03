@@ -1,15 +1,26 @@
 <?php
 
-namespace Yocto;
+namespace Limon;
 
-abstract class Middleware
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
+class Middleware implements RequestHandlerInterface
 {
-    protected Middleware $next;
+    protected RequestHandlerInterface $next;
 
-    abstract public function process(Request $request): Response;
+    protected MiddlewareInterface $middleware;
 
-    public function setNext(Middleware $middleware): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->next = $middleware;
+        return $this->middleware->process($request, $this->next);
+    }
+
+    public function __construct(MiddlewareInterface $middleware, RequestHandlerInterface $next)
+    {
+        $this->middleware = $middleware;
+        $this->next = $next;
     }
 }

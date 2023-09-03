@@ -1,0 +1,23 @@
+<phpunit bootstrap = "vendor/autoload.php"
+    backupGlobals               = "false"
+    colors                      = "true"
+    processIsolation            = "false"
+    stopOnFailure               = "false">
+
+    <testsuites>
+        <testsuite name="Yocto Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <env name="APP_ENV" value="testing"/>
+    </php>
+
+</phpunit>

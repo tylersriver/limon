@@ -1,37 +1,53 @@
 <?php
 
-namespace Yocto;
+namespace Limon;
 
-/**
- * The Kernel is a middleware implementation
- * that's purpose is to execute the route of the
- * request.
- *
- * It will NOT call the $next object, regardless if it is set or not.
- */
-class Kernel extends Middleware
+use Limon\Events\KernelError;
+use Limon\Events\KernelAction;
+use Limon\Events\KernelRequest;
+use Limon\Events\KernelResponse;
+use Psr\Http\Message\ResponseInterface;
+use Limon\Handler\HandlerResolverInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Limon\Handler\Exception\InvalidHandlerException;
+use Limon\Handler\Exception\HandlerNotFoundException;
+use Limon\Handler\Exception\FailedToCreateHandlerException;
+use Limon\Handler\Exception\HandlerAttributeNotSetException;
+
+class Kernel implements RequestHandlerInterface
 {
-    private Router $router;
-
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
+    public function __construct(
+        private HandlerResolverInterface $resolver,
+        private ?EventDispatcherInterface $eventDispatcher = null
+    ) {
     }
 
-    public function process(Request $request): Response
+    /**
+     * @throws FailedToCreateHandlerException
+     * @throws HandlerNotFoundException
+     * @throws HandlerAttributeNotSetException
+     * @throws InvalidHandlerException
+     */
+    /** @SuppressWarnings(PHPMD) */
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // Get action
-        $route = $this->router->dispatch($request);
-        if ($route === null) {
-            return error("Route Not Found");
-        }
+        $this->eventDispatcher?->dispatch(new KernelRequest($request));
 
-        // Inject attributes to the request
-        foreach ($route[1] as $key => $val) {
-            $request->setAttribute($key, $val);
-        }
+        // Resolve the handler callable, exceptions should be handled
+        // elsewhere in middleware
+        $handler = $this->resolver->resolve($request);
+        $this->eventDispatcher?->dispatch(new KernelAction($request));
 
-        // Execute Action
-        return $route[0]($request);
+        // Try the handler, when error dispatch event and re-throw
+        try {
+            $response = $handler($request);
+            $this->eventDispatcher?->dispatch(new KernelResponse($request, $response));
+            return $response;
+        } catch (\Throwable $e) {
+            $this->eventDispatcher?->dispatch(new KernelError($request, $e));
+            throw $e;
+        }
     }
 }

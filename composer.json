@@ -1,5 +1,5 @@
 {
-    "name": "tylersriver/yocto",
+    "name": "tylersriver/limon",
     "type": "framework",
     "description": "Dependency-less, Simple PHP Framework",
     "license": "MIT",
@@ -18,7 +18,8 @@
         "@md",
         "@unit"
       ],
-      "unit": "phpunit",
+      "lint": "vendor/bin/parallel-lint src",
+      "unit": "pest --coverage",
       "github-action-phpunit": "phpunit --no-coverage",
       "stan": "phpstan analyse src --memory-limit=-1",
       "sniff": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s --colors src/",
@@ -26,14 +27,24 @@
       "md": "php vendor/phpmd/phpmd/src/bin/phpmd src/ ansi mdruleset.xml"
     },
     "require": {
-        "php": "^8.0"
+        "php": "^8.2",
+        "psr/container": "^2.0",
+        "psr/event-dispatcher": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/log": "^3.0"
     },
     "config": {
-      "sort-packages": true
+      "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "autoload": {
       "psr-4": {
-        "Yocto\\": "src/"
+        "Limon\\": "src/"
       },
       "files": [
         "src/functions.php"
@@ -41,15 +52,16 @@
     },
     "autoload-dev": {
       "psr-4": {
-        "Yocto\\Tests\\": "tests",
+        "Limon\\Tests\\": "tests",
         "Example\\": "tests/Example"
       }
     },
     "require-dev": {
-        "jakub-onderka/php-console-highlighter": "^0.4.0",
+        "mockery/mockery": "^1.5",
+        "pestphp/pest": "^2",
+        "php-parallel-lint/php-parallel-lint": "^1.3",
         "phpmd/phpmd": "^2.8",
-        "phpstan/phpstan": "^0.12.5",
-        "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.5"
+        "phpstan/phpstan": "^1.4",
+        "squizlabs/php_codesniffer": "^3.6"
     }
   }
