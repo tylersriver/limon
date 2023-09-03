@@ -1,8 +1,8 @@
 <?php
 
-use Yocto\App;
-use Yocto\Kernel;
-use Yocto\Handler\ActionResolver;
+use Limon\App;
+use Limon\Kernel;
+use Limon\Handler\ActionResolver;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;

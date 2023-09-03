@@ -1,12 +1,12 @@
 <?php
 
-use Yocto\Kernel;
+use Limon\Kernel;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Yocto\Action;
-use Yocto\Handler\ActionResolver;
-use Yocto\Handler\Exception\HandlerAttributeNotSetException;
+use Limon\Action;
+use Limon\Handler\ActionResolver;
+use Limon\Handler\Exception\HandlerAttributeNotSetException;
 
 it('calls kernel handle', function() {
     

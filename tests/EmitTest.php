@@ -3,7 +3,7 @@
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-use function Yocto\emit;
+use function Limon\emit;
 
 it('emits response', function() {
     $response = Mockery::mock(ResponseInterface::class);

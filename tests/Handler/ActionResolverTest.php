@@ -1,14 +1,14 @@
 <?php
 
-use Yocto\Handler\ActionResolver;
+use Limon\Handler\ActionResolver;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yocto\Action;
-use Yocto\Handler\Exception\InvalidHandlerException;
-use Yocto\Handler\Exception\HandlerNotFoundException;
-use Yocto\Handler\Exception\FailedToCreateHandlerException;
-use Yocto\Handler\Exception\HandlerAttributeNotSetException;
+use Limon\Action;
+use Limon\Handler\Exception\InvalidHandlerException;
+use Limon\Handler\Exception\HandlerNotFoundException;
+use Limon\Handler\Exception\FailedToCreateHandlerException;
+use Limon\Handler\Exception\HandlerAttributeNotSetException;
 
 it('throws HandlerAttributeNotSetException', function() {
     $container = Mockery::mock(ContainerInterface::class);
