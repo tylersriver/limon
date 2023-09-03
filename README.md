@@ -1,7 +1,10 @@
 # Limon
-Dependency-less PHP Micro Framework with a focus on simplicity to get you up
-and prototyping new APIs and Websites quickly.  
+Dependency-less PHP Micro Framework with a focus on simplicity to get you
+prototyping and delivering new APIs and Websites quickly. 
+
 ```php
+<?php // example basic index.php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 (function() {
