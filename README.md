@@ -5,22 +5,27 @@ and prototyping new APIs and Websites quickly.
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 (function() {
-    /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var Psr\EventDispatcher\EventDispatcherInterface $eventDispatcher */
     $eventDispatcher = somePsrEventDispatcher();
     $handlerResolver = new ActionResolver
-
-    $kernel = new Limon\Kernel(
-        $handlerResolver,
-        $eventDispatcher
-    );
-
     $app = new Limon\App(
-        $kernel
+        new Limon\Kernel(
+            $handlerResolver,
+            $eventDispatcher
+        )
     );
 
-
-    /** @var ServerRequestInterface $request */
+    /** @var Psr\Http\Message\ServerRequestInterface $request */
     $request = captureServerRequest();
+
+    // Reguster a handler, this can be replaced 
+    // with middleware that sets the request-handler attribute
+    // with a routing package
+    $request = $request->withAttribute(
+        'requst-handler', 
+        fn(ServerRequestInterface $request) => new Response()
+    );
+
     $res = $app->handle(
         $request
     );
