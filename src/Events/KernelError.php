@@ -1,10 +1,9 @@
 <?php
 
-namespace Yocto\Events;
+namespace Limon\Events;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Yocto\Action;
 
 class KernelError extends KernelEvent
 {

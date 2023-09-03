@@ -44,7 +44,7 @@
     },
     "autoload": {
       "psr-4": {
-        "Yocto\\": "src/"
+        "Limon\\": "src/"
       },
       "files": [
         "src/functions.php"

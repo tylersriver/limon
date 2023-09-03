@@ -1,12 +1,12 @@
 <?php
 
-namespace Yocto;
+namespace Limon;
 
 use Psr\Http\Message\ResponseInterface;
 
 use function function_exists;
 
-if (!function_exists('Yocto\emit')) {
+if (!function_exists('Limon\emit')) {
     /**
      * Emit the response to the client
      *

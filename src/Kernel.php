@@ -1,20 +1,20 @@
 <?php
 
-namespace Yocto;
+namespace Limon;
 
-use Yocto\Events\KernelError;
-use Yocto\Events\KernelAction;
-use Yocto\Events\KernelRequest;
-use Yocto\Events\KernelResponse;
+use Limon\Events\KernelError;
+use Limon\Events\KernelAction;
+use Limon\Events\KernelRequest;
+use Limon\Events\KernelResponse;
 use Psr\Http\Message\ResponseInterface;
-use Yocto\Handler\HandlerResolverInterface;
+use Limon\Handler\HandlerResolverInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Yocto\Handler\Exception\InvalidHandlerException;
-use Yocto\Handler\Exception\HandlerNotFoundException;
-use Yocto\Handler\Exception\FailedToCreateHandlerException;
-use Yocto\Handler\Exception\HandlerAttributeNotSetException;
+use Limon\Handler\Exception\InvalidHandlerException;
+use Limon\Handler\Exception\HandlerNotFoundException;
+use Limon\Handler\Exception\FailedToCreateHandlerException;
+use Limon\Handler\Exception\HandlerAttributeNotSetException;
 
 class Kernel implements RequestHandlerInterface
 {

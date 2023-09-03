@@ -1,6 +1,6 @@
 <?php
 
-namespace Yocto\Handler\Exception;
+namespace Limon\Handler\Exception;
 
 class HandlerAttributeNotSetException extends HandlerException
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Yocto;
+namespace Limon;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

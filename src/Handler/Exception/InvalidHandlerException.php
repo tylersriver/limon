@@ -1,8 +1,8 @@
 <?php
 
-namespace Yocto\Handler\Exception;
+namespace Limon\Handler\Exception;
 
-use Yocto\Action;
+use Limon\Action;
 
 class InvalidHandlerException extends HandlerException
 {

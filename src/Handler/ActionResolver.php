@@ -1,15 +1,15 @@
 <?php
 
-namespace Yocto\Handler;
+namespace Limon\Handler;
 
 use Throwable;
-use Yocto\Action;
+use Limon\Action;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yocto\Handler\Exception\InvalidHandlerException;
-use Yocto\Handler\Exception\HandlerNotFoundException;
-use Yocto\Handler\Exception\FailedToCreateHandlerException;
-use Yocto\Handler\Exception\HandlerAttributeNotSetException;
+use Limon\Handler\Exception\InvalidHandlerException;
+use Limon\Handler\Exception\HandlerNotFoundException;
+use Limon\Handler\Exception\FailedToCreateHandlerException;
+use Limon\Handler\Exception\HandlerAttributeNotSetException;
 
 class ActionResolver implements HandlerResolverInterface
 {

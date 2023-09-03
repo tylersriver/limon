@@ -1,6 +1,6 @@
 <?php
 
-namespace Yocto\Events;
+namespace Limon\Events;
 
 class KernelResponse extends KernelEvent
 {

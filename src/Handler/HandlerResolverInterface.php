@@ -1,11 +1,11 @@
 <?php
 
-namespace Yocto\Handler;
+namespace Limon\Handler;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Yocto\Handler\Exception\InvalidHandlerException;
-use Yocto\Handler\Exception\HandlerNotFoundException;
-use Yocto\Handler\Exception\FailedToCreateHandlerException;
+use Limon\Handler\Exception\InvalidHandlerException;
+use Limon\Handler\Exception\HandlerNotFoundException;
+use Limon\Handler\Exception\FailedToCreateHandlerException;
 
 interface HandlerResolverInterface
 {
