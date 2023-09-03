@@ -36,7 +36,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 This getting started is based on XAMPP
 1. Require the composer package
 ```cli
-composer require tylersriver/yocto
+composer require tylersriver/limon
 ```
 2. Create index.php at Apache web root
 3. Create .htaccess with below
