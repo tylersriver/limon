@@ -2,19 +2,16 @@
 Dependency-less PHP Micro Framework with a focus on simplicity to get you
 prototyping and delivering new APIs and Websites quickly. 
 
+## Basic Usage
 ```php
 <?php // example basic index.php
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 (function() {
-    /** @var Psr\EventDispatcher\EventDispatcherInterface $eventDispatcher */
-    $eventDispatcher = somePsrEventDispatcher();
-    $handlerResolver = new ActionResolver
     $app = new Limon\App(
         new Limon\Kernel(
-            $handlerResolver,
-            $eventDispatcher
+            new ActionResolver
         )
     );
 
@@ -29,9 +26,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
         fn(ServerRequestInterface $request) => new Response()
     );
 
-    $res = $app->handle(
-        $request
-    );
+    $res = $app->handle($request);
 
     Limon\emit($res);
 })();
