@@ -67,16 +67,16 @@ it('throws exception during handle', function() {
     $dispatcher = Mockery::mock(EventDispatcherInterface::class);
     $dispatcher->allows('dispatch')->times(3)->withAnyArgs();
 
+    $request = Mockery::mock(ServerRequestInterface::class);
+
     $resolver = Mockery::mock(ActionResolver::class);
-    $resolver->allows('resolve')->once()->with($action::class)->andReturns($action);
+    $resolver->allows('resolve')->once()->with($request)->andReturns($action);
 
     $kernel = new Kernel(
         $resolver,
         $dispatcher
     );
 
-    $request = Mockery::mock(ServerRequestInterface::class);
-    $request->allows('getAttribute')->once()->with('request-handler', null)->andReturn($action::class);
 
     $kernel->handle($request);
 })->throws(\Exception::class);
