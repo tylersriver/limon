@@ -49,7 +49,7 @@ class ActionResolver implements HandlerResolverInterface
             }
 
             return $action;
-        } catch(NotFoundExceptionInterface $e) {
+        } catch (NotFoundExceptionInterface $e) {
             throw new HandlerNotFoundException($handler);
         } catch (Throwable $e) {
             throw new FailedToCreateHandlerException($handler, $e);
