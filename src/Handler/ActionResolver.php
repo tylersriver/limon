@@ -10,6 +10,7 @@ use Limon\Handler\Exception\InvalidHandlerException;
 use Limon\Handler\Exception\HandlerNotFoundException;
 use Limon\Handler\Exception\FailedToCreateHandlerException;
 use Limon\Handler\Exception\HandlerAttributeNotSetException;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ActionResolver implements HandlerResolverInterface
 {
@@ -37,7 +38,7 @@ class ActionResolver implements HandlerResolverInterface
 
     private function fromContainer(string $handler): Action
     {
-        if ($this->container === null || !$this->container->has($handler)) {
+        if ($this->container === null) {
             throw new HandlerNotFoundException($handler);
         }
 
@@ -48,6 +49,8 @@ class ActionResolver implements HandlerResolverInterface
             }
 
             return $action;
+        } catch(NotFoundExceptionInterface $e) {
+            throw new HandlerNotFoundException($handler);
         } catch (Throwable $e) {
             throw new FailedToCreateHandlerException($handler, $e);
         }
