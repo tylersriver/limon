@@ -20,6 +20,12 @@ class ActionResolver implements HandlerResolverInterface
         $this->container = $container;
     }
 
+    /**
+     * @throws HandlerAttributeNotSetException
+     * @throws HandlerNotFoundException
+     * @throws FailedToCreateHandlerException
+     * @throws InvalidHandlerException
+     */
     public function resolve(ServerRequestInterface $request): callable
     {
         $handler = $request->getAttribute('request-handler', null);
